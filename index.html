@@ -5,160 +5,148 @@
 <title>Fracción a Número Mixto</title>
 
 <style>
-body {
+body{
     font-family: Comic Sans MS, Arial, sans-serif;
-    background-color: #f5faff;
     text-align: center;
-    padding: 20px;
+    background:#f5faff;
+    padding:20px;
 }
 
-h1 {
-    color: #2a7ae2;
+.caja{
+    background:white;
+    width:280px;
+    margin:20px auto;
+    padding:15px;
+    border-radius:12px;
+    box-shadow:0 0 8px #ccc;
 }
 
-.caja {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    margin: 20px auto;
-    width: 300px;
-    box-shadow: 0 0 10px #ccc;
+input{
+    width:70px;
+    font-size:20px;
+    text-align:center;
 }
 
-input {
-    width: 80px;
-    font-size: 20px;
-    text-align: center;
-    margin: 5px;
+button{
+    margin-top:10px;
+    padding:8px 20px;
+    font-size:16px;
+    border:none;
+    border-radius:8px;
+    background:#2a7ae2;
+    color:white;
+    cursor:pointer;
 }
 
-button {
-    background-color: #2a7ae2;
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    font-size: 16px;
-    border-radius: 10px;
-    cursor: pointer;
+/* ===== DIVISIÓN LARGA REAL ===== */
+.division{
+    margin:15px auto;
+    display:inline-block;
+    font-size:28px;
 }
 
-/* ===== DIVISIÓN LARGA ===== */
-.division-larga {
-    display: inline-grid;
-    grid-template-columns: auto auto;
-    align-items: center;
-    font-size: 28px;
-    margin-top: 10px;
+.division table{
+    border-collapse:collapse;
 }
 
-.divisor {
-    padding-right: 10px;
+.division td{
+    padding:2px 8px;
 }
 
-.caja-division {
-    border-left: 4px solid black;
-    border-top: 4px solid black;
-    padding-left: 10px;
-    padding-top: 5px;
+.borde-vertical{
+    border-left:4px solid black;
 }
 
-.cociente {
-    text-align: center;
-    margin-bottom: 5px;
+.borde-superior{
+    border-top:4px solid black;
+    text-align:center;
 }
 
-/* ===== NÚMERO MIXTO ===== */
-.mixto {
-    display: inline-flex;
-    align-items: center;
-    font-size: 28px;
-    margin-top: 10px;
+/* ===== FRACCIÓN REAL ===== */
+.mixto{
+    display:inline-block;
+    font-size:28px;
 }
 
-.fraccion {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: 8px;
+.fraccion{
+    display:inline-block;
+    vertical-align:middle;
+    text-align:center;
+    margin-left:5px;
 }
 
-.fraccion span {
-    line-height: 1;
+.fraccion .linea{
+    border-top:3px solid black;
+    margin:2px 0;
 }
 
-.linea-fraccion {
-    width: 30px;
-    border-top: 3px solid black;
-    margin: 2px 0;
-}
-
-.resultado {
-    color: green;
-    font-weight: bold;
-}
-
-.error {
-    color: red;
-    font-weight: bold;
+.resultado{
+    color:green;
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<h1>📘 Fracción a Número Mixto</h1>
+<h2>Fracción a número mixto</h2>
 
 <div class="caja">
-    <p>Ingresa la fracción</p>
-    <input type="number" id="numerador" placeholder="7"><br>
+    <input id="n" type="number" placeholder="7"><br>
     ―<br>
-    <input type="number" id="denominador" placeholder="3"><br><br>
+    <input id="d" type="number" placeholder="3"><br>
     <button onclick="convertir()">Convertir</button>
 </div>
 
 <div class="caja" id="salida"></div>
 
 <script>
-function convertir() {
-    let n = parseInt(document.getElementById("numerador").value);
-    let d = parseInt(document.getElementById("denominador").value);
-    let salida = document.getElementById("salida");
+function convertir(){
+    let n = Number(document.getElementById("n").value);
+    let d = Number(document.getElementById("d").value);
+    let s = document.getElementById("salida");
 
-    if (isNaN(n) || isNaN(d) || d === 0) {
-        salida.innerHTML = "<p class='error'>⚠️ Datos incorrectos</p>";
+    if(!n || !d || d===0){
+        s.innerHTML = "⚠️ Datos incorrectos";
         return;
     }
 
-    let entero = Math.floor(n / d);
-    let residuo = n % d;
+    let entero = Math.floor(n/d);
+    let resto = n % d;
 
-    salida.innerHTML = `
-        <h3>📐 División larga</h3>
+    s.innerHTML = `
+    <h3>División larga</h3>
 
-        <div class="division-larga">
-            <div class="divisor">${d}</div>
-            <div class="caja-division">
-                <div class="cociente">${entero}</div>
-                <div>${n}</div>
-            </div>
+    <div class="division">
+        <table>
+            <tr>
+                <td></td>
+                <td class="borde-superior">${entero}</td>
+            </tr>
+            <tr>
+                <td>${d}</td>
+                <td class="borde-vertical">${n}</td>
+            </tr>
+        </table>
+    </div>
+
+    <p>${d} × ${entero} = ${d*entero}</p>
+    <p>${n} − ${d*entero} = ${resto}</p>
+
+    <h3>Número mixto</h3>
+
+    <div class="mixto resultado">
+        ${entero}
+        <div class="fraccion">
+            <div>${resto}</div>
+            <div class="linea"></div>
+            <div>${d}</div>
         </div>
-
-        <p>${d} × ${entero} = ${d * entero}</p>
-        <p>${n} − ${d * entero} = ${residuo}</p>
-
-        <h3>🎉 Número mixto</h3>
-
-        <div class="mixto resultado">
-            ${entero}
-            <div class="fraccion">
-                <span>${residuo}</span>
-                <div class="linea-fraccion"></div>
-                <span>${d}</span>
-            </div>
-        </div>
+    </div>
     `;
 }
 </script>
 
 </body>
 </html>
+
