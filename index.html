@@ -7,17 +7,12 @@
 <style>
 body {
     font-family: Arial, sans-serif;
-    background: #f5f5f5;
     text-align: center;
+    background: #f7f7f7;
 }
 
-.contenedor {
-    background: white;
-    width: 300px;
-    margin: auto;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #ccc;
+h1 {
+    color: #333;
 }
 
 input {
@@ -27,132 +22,170 @@ input {
 }
 
 button {
+    font-size: 18px;
+    padding: 5px 15px;
     margin-top: 10px;
-    padding: 8px 15px;
-    font-size: 16px;
+    cursor: pointer;
 }
 
-/* DIVISIÓN TIPO CUADERNO */
+.contenedor {
+    margin-top: 30px;
+}
+
+/* ===== DIVISIÓN LARGA ===== */
 .division {
-    position: relative;
-    width: 200px;
-    height: 180px;
-    margin: 20px auto;
-    font-size: 24px;
-    font-weight: bold;
+    display: inline-grid;
+    grid-template-columns: 60px 20px 60px;
+    grid-template-rows: auto auto auto;
+    font-size: 26px;
+    align-items: center;
+    justify-items: center;
+    margin-top: 20px;
+}
+
+.divisor {
+    grid-column: 1;
+    grid-row: 1;
 }
 
 .linea-vertical {
-    position: absolute;
-    left: 100px;
-    top: 10px;
-    height: 160px;
-    border-left: 4px solid black;
-}
-
-.linea-horizontal {
-    position: absolute;
-    left: 100px;
-    top: 45px;
-    width: 90px;
-    border-top: 4px solid black;
-}
-
-/* Posiciones */
-.numerador {
-    position: absolute;
-    top: 10px;
-    left: 40px;
-}
-
-.denominador {
-    position: absolute;
-    top: 10px;
-    left: 120px;
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    width: 4px;
+    background: black;
+    height: 120px;
 }
 
 .cociente {
-    position: absolute;
-    top: 80px;
-    left: 140px;
+    grid-column: 3;
+    grid-row: 1;
 }
 
-.producto {
-    position: absolute;
-    top: 70px;
-    left: 35px;
+.linea-horizontal {
+    grid-column: 3;
+    grid-row: 2;
+    width: 60px;
+    height: 4px;
+    background: black;
 }
 
-.resto {
-    position: absolute;
-    top: 120px;
-    left: 45px;
+.residuo {
+    grid-column: 1;
+    grid-row: 3;
 }
 
-.mixto {
-    font-size: 26px;
-    color: green;
-    font-weight: bold;
+/* ===== OPERACIONES ===== */
+.operaciones {
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+/* ===== NÚMERO MIXTO ===== */
+.mixto-contenedor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.entero {
+    font-size: 32px;
+    margin-right: 10px;
+}
+
+.fraccion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 22px;
+}
+
+.linea-fraccion {
+    width: 30px;
+    border-top: 3px solid black;
+    margin: 3px 0;
 }
 </style>
 </head>
 
 <body>
 
-<h2>📘 De fracción a número mixto</h2>
+<h1>Convertir fracción a número mixto</h1>
+
+<p>
+Numerador:
+<input type="number" id="num" value="7">
+&nbsp;&nbsp;
+Denominador:
+<input type="number" id="den" value="3">
+</p>
+
+<button onclick="calcular()">Convertir</button>
 
 <div class="contenedor">
+    <h2>✏️ División larga</h2>
+    <div id="division"></div>
 
-    <input type="number" id="num" placeholder="7"> —
-    <input type="number" id="den" placeholder="3">
-    <br>
-    <button onclick="convertir()">Convertir</button>
+    <div class="operaciones" id="operaciones"></div>
 
-    <h3>✏️ División larga</h3>
-
-    <div class="division" id="division"></div>
-
-    <h3>🎉 Número mixto</h3>
-    <div class="mixto" id="mixto"></div>
-
+    <h2>🎉 Número mixto</h2>
+    <div id="mixto"></div>
 </div>
 
 <script>
-function convertir() {
-    let n = parseInt(document.getElementById("num").value);
-    let d = parseInt(document.getElementById("den").value);
+function calcular() {
+    const n = parseInt(document.getElementById("num").value);
+    const d = parseInt(document.getElementById("den").value);
 
-    if (isNaN(n) || isNaN(d) || d === 0) {
-        alert("Ingresa valores válidos");
+    if (d === 0) {
+        alert("El denominador no puede ser 0");
         return;
     }
 
-    let cociente = Math.floor(n / d);
-    let residuo = n % d;
-    let producto = cociente * d;
+    const cociente = Math.floor(n / d);
+    const residuo = n % d;
+    const producto = cociente * d;
 
+    // DIVISIÓN LARGA
     document.getElementById("division").innerHTML = `
-        <div class="linea-vertical"></div>
-        <div class="linea-horizontal"></div>
-
-        <div class="numerador">${n}</div>
-        <div class="denominador">${d}</div>
-
-        <div class="producto">-${producto}</div>
-        <div class="resto">${residuo}</div>
-
-        <div class="cociente">${cociente}</div>
+        <div class="division">
+            <div class="divisor">${n}</div>
+            <div class="linea-vertical"></div>
+            <div class="cociente">${d}</div>
+            <div class="linea-horizontal"></div>
+            <div class="residuo">${residuo}</div>
+        </div>
     `;
 
+    // OPERACIONES
+    document.getElementById("operaciones").innerHTML = `
+        ${d} × ${cociente} = ${producto}<br>
+        ${n} − ${producto} = ${residuo}
+    `;
+
+    // NÚMERO MIXTO
     if (residuo === 0) {
-        document.getElementById("mixto").innerHTML = cociente;
+        document.getElementById("mixto").innerHTML = `
+            <div class="mixto-contenedor">
+                <div class="entero">${cociente}</div>
+            </div>
+        `;
     } else {
-        document.getElementById("mixto").innerHTML =
-            `${cociente} <sup>${residuo}</sup>/<sub>${d}</sub>`;
+        document.getElementById("mixto").innerHTML = `
+            <div class="mixto-contenedor">
+                <div class="entero">${cociente}</div>
+                <div class="fraccion">
+                    <div>${residuo}</div>
+                    <div class="linea-fraccion"></div>
+                    <div>${d}</div>
+                </div>
+            </div>
+        `;
     }
 }
 </script>
 
 </body>
 </html>
+
 
