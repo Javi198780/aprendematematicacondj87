@@ -24,7 +24,13 @@ button {
     cursor: pointer;
 }
 
-/* ===== FRACCIÓN INICIAL (ESTILO CUADERNO) ===== */
+/* ===== COLORES DIDÁCTICOS ===== */
+.color-num { color: #1e88e5; }   /* azul */
+.color-den { color: #2e7d32; }   /* verde */
+.color-coc { color: #6a1b9a; }   /* morado */
+.color-res { color: #c62828; }   /* rojo */
+
+/* ===== FRACCIÓN INICIAL ===== */
 .fraccion-vertical {
     display: inline-flex;
     flex-direction: column;
@@ -49,15 +55,8 @@ button {
     width: 200px;
 }
 
-.num {
-    grid-column: 1;
-    grid-row: 1;
-}
-
-.div {
-    grid-column: 3;
-    grid-row: 1;
-}
+.num { grid-column: 1; grid-row: 1; }
+.div { grid-column: 3; grid-row: 1; }
 
 .linea-h-der {
     grid-column: 3;
@@ -67,10 +66,7 @@ button {
     margin: auto;
 }
 
-.cociente {
-    grid-column: 3;
-    grid-row: 3;
-}
+.cociente { grid-column: 3; grid-row: 3; }
 
 .linea-vertical {
     grid-column: 2;
@@ -80,10 +76,7 @@ button {
     align-self: stretch;
 }
 
-.resta {
-    grid-column: 1;
-    grid-row: 3;
-}
+.resta { grid-column: 1; grid-row: 3; }
 
 .linea-h-izq {
     grid-column: 1;
@@ -93,10 +86,7 @@ button {
     margin: auto;
 }
 
-.res {
-    grid-column: 1;
-    grid-row: 5;
-}
+.res { grid-column: 1; grid-row: 5; }
 
 /* ===== NÚMERO MIXTO ===== */
 .mixto-contenedor {
@@ -137,12 +127,11 @@ Denominador:
 <input type="number" id="den" value="2" oninput="actualizarFraccion()">
 </p>
 
-<!-- FRACCIÓN INICIAL -->
 <h2>📘 Fracción inicial</h2>
 <div class="fraccion-vertical">
-    <div id="numVista">6</div>
+    <div id="numVista" class="color-num">6</div>
     <div class="fraccion-linea"></div>
-    <div id="denVista">2</div>
+    <div id="denVista" class="color-den">2</div>
 </div>
 
 <br>
@@ -176,39 +165,39 @@ function calcular() {
     const residuo = n % d;
     const producto = cociente * d;
 
-    // DIVISIÓN LARGA
+    // DIVISIÓN
     document.getElementById("division").innerHTML = `
         <div class="division">
-            <div class="num">${n}</div>
+            <div class="num color-num">${n}</div>
             <div class="linea-vertical"></div>
-            <div class="div">${d}</div>
+            <div class="div color-den">${d}</div>
 
             <div class="linea-h-der"></div>
 
-            <div class="resta">-${producto}</div>
-            <div class="cociente">${cociente}</div>
+            <div class="resta color-den">-${producto}</div>
+            <div class="cociente color-coc">${cociente}</div>
 
             <div class="linea-h-izq"></div>
 
-            <div class="res">${residuo}</div>
+            <div class="res color-res">${residuo}</div>
         </div>
     `;
 
-    // NÚMERO MIXTO
+    // NÚMERO MIXTO (COLORES COHERENTES)
     if (residuo === 0) {
         document.getElementById("mixto").innerHTML = `
             <div class="mixto-contenedor">
-                <div class="entero">${cociente}</div>
+                <div class="entero color-coc">${cociente}</div>
             </div>
         `;
     } else {
         document.getElementById("mixto").innerHTML = `
             <div class="mixto-contenedor">
-                <div class="entero">${cociente}</div>
+                <div class="entero color-coc">${cociente}</div>
                 <div class="fraccion">
-                    <div>${residuo}</div>
+                    <div class="color-res">${residuo}</div>
                     <div class="linea-fraccion"></div>
-                    <div>${d}</div>
+                    <div class="color-den">${d}</div>
                 </div>
             </div>
         `;
@@ -218,5 +207,6 @@ function calcular() {
 
 </body>
 </html>
+
 
 
