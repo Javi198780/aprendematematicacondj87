@@ -7,75 +7,101 @@
 <style>
 body{
     font-family: Comic Sans MS, Arial, sans-serif;
-    text-align: center;
     background:#f5faff;
+    text-align:center;
     padding:20px;
+}
+
+h2{
+    color:#2a7ae2;
 }
 
 .caja{
     background:white;
-    width:280px;
+    width:300px;
     margin:20px auto;
     padding:15px;
-    border-radius:12px;
-    box-shadow:0 0 8px #ccc;
+    border-radius:15px;
+    box-shadow:0 0 10px #ccc;
 }
 
 input{
-    width:70px;
+    width:80px;
     font-size:20px;
     text-align:center;
 }
 
 button{
     margin-top:10px;
-    padding:8px 20px;
+    padding:8px 25px;
     font-size:16px;
     border:none;
-    border-radius:8px;
+    border-radius:10px;
     background:#2a7ae2;
     color:white;
     cursor:pointer;
 }
 
-/* ===== DIVISIÓN LARGA REAL ===== */
-.division{
-    margin:15px auto;
+/* ===== DIVISIÓN LARGA TIPO CUADERNO ===== */
+.division-cuaderno{
+    position:relative;
     display:inline-block;
     font-size:28px;
+    margin:20px;
+    height:90px;
+    width:90px;
 }
 
-.division table{
-    border-collapse:collapse;
+.cociente{
+    position:absolute;
+    top:0;
+    left:35px;
 }
 
-.division td{
-    padding:2px 8px;
+.divisor{
+    position:absolute;
+    top:45px;
+    left:0;
 }
 
-.borde-vertical{
+.dividendo{
+    position:absolute;
+    top:45px;
+    left:35px;
+}
+
+.linea-vertical{
+    position:absolute;
+    top:35px;
+    left:30px;
+    height:45px;
     border-left:4px solid black;
 }
 
-.borde-superior{
+.linea-horizontal{
+    position:absolute;
+    top:35px;
+    left:30px;
+    width:45px;
     border-top:4px solid black;
-    text-align:center;
 }
 
-/* ===== FRACCIÓN REAL ===== */
+/* ===== NÚMERO MIXTO REAL ===== */
 .mixto{
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
     font-size:28px;
 }
 
 .fraccion{
-    display:inline-block;
-    vertical-align:middle;
-    text-align:center;
-    margin-left:5px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-left:6px;
 }
 
 .fraccion .linea{
+    width:30px;
     border-top:3px solid black;
     margin:2px 0;
 }
@@ -84,17 +110,23 @@ button{
     color:green;
     font-weight:bold;
 }
+
+.error{
+    color:red;
+    font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
-<h2>Fracción a número mixto</h2>
+<h2>📘 Fracción a Número Mixto</h2>
 
 <div class="caja">
+    <p>Ingresa la fracción</p>
     <input id="n" type="number" placeholder="7"><br>
     ―<br>
-    <input id="d" type="number" placeholder="3"><br>
+    <input id="d" type="number" placeholder="3"><br><br>
     <button onclick="convertir()">Convertir</button>
 </div>
 
@@ -102,47 +134,47 @@ button{
 
 <script>
 function convertir(){
-    let n = Number(document.getElementById("n").value);
-    let d = Number(document.getElementById("d").value);
-    let s = document.getElementById("salida");
+    let n = parseInt(document.getElementById("n").value);
+    let d = parseInt(document.getElementById("d").value);
+    let salida = document.getElementById("salida");
 
-    if(!n || !d || d===0){
-        s.innerHTML = "⚠️ Datos incorrectos";
+    if(isNaN(n) || isNaN(d) || d === 0){
+        salida.innerHTML = "<p class='error'>⚠️ Datos incorrectos</p>";
         return;
     }
 
-    let entero = Math.floor(n/d);
-    let resto = n % d;
+    if(n < d){
+        salida.innerHTML = "<p>🤔 Esta fracción no se convierte en número mixto</p>";
+        return;
+    }
 
-    s.innerHTML = `
-    <h3>División larga</h3>
+    let entero = Math.floor(n / d);
+    let residuo = n % d;
 
-    <div class="division">
-        <table>
-            <tr>
-                <td></td>
-                <td class="borde-superior">${entero}</td>
-            </tr>
-            <tr>
-                <td>${d}</td>
-                <td class="borde-vertical">${n}</td>
-            </tr>
-        </table>
-    </div>
+    salida.innerHTML = `
+        <h3>✏️ División larga</h3>
 
-    <p>${d} × ${entero} = ${d*entero}</p>
-    <p>${n} − ${d*entero} = ${resto}</p>
-
-    <h3>Número mixto</h3>
-
-    <div class="mixto resultado">
-        ${entero}
-        <div class="fraccion">
-            <div>${resto}</div>
-            <div class="linea"></div>
-            <div>${d}</div>
+        <div class="division-cuaderno">
+            <div class="cociente">${entero}</div>
+            <div class="divisor">${d}</div>
+            <div class="linea-vertical"></div>
+            <div class="linea-horizontal"></div>
+            <div class="dividendo">${n}</div>
         </div>
-    </div>
+
+        <p>${d} × ${entero} = ${d * entero}</p>
+        <p>${n} − ${d * entero} = ${residuo}</p>
+
+        <h3>🎉 Número mixto</h3>
+
+        <div class="mixto resultado">
+            ${entero}
+            <div class="fraccion">
+                <div>${residuo}</div>
+                <div class="linea"></div>
+                <div>${d}</div>
+            </div>
+        </div>
     `;
 }
 </script>
