@@ -21,7 +21,7 @@ h1 {
     border-radius: 15px;
     padding: 20px;
     margin: 20px auto;
-    width: 80%;
+    width: 300px;
     box-shadow: 0 0 10px #ccc;
 }
 
@@ -30,8 +30,6 @@ input {
     font-size: 20px;
     text-align: center;
     margin: 5px;
-    border-radius: 8px;
-    border: 1px solid #aaa;
 }
 
 button {
@@ -44,35 +42,57 @@ button {
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #1d5bbf;
-}
-
-/* División larga */
-.division {
-    display: inline-flex;
-    align-items: flex-start;
-    font-size: 26px;
-    margin-top: 15px;
+/* ===== DIVISIÓN LARGA ===== */
+.division-larga {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    font-size: 28px;
+    margin-top: 10px;
 }
 
 .divisor {
     padding-right: 10px;
 }
 
-.linea-vertical {
-    border-left: 3px solid black;
+.caja-division {
+    border-left: 4px solid black;
+    border-top: 4px solid black;
     padding-left: 10px;
+    padding-top: 5px;
 }
 
-.linea-horizontal {
-    border-top: 3px solid black;
-    width: 60px;
+.cociente {
+    text-align: center;
     margin-bottom: 5px;
 }
 
+/* ===== NÚMERO MIXTO ===== */
+.mixto {
+    display: inline-flex;
+    align-items: center;
+    font-size: 28px;
+    margin-top: 10px;
+}
+
+.fraccion {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.fraccion span {
+    line-height: 1;
+}
+
+.linea-fraccion {
+    width: 30px;
+    border-top: 3px solid black;
+    margin: 2px 0;
+}
+
 .resultado {
-    font-size: 24px;
     color: green;
     font-weight: bold;
 }
@@ -87,16 +107,12 @@ button:hover {
 <body>
 
 <h1>📘 Fracción a Número Mixto</h1>
-<p>Aprendemos como en el cuaderno 😊</p>
 
 <div class="caja">
-    <h2>✏️ Ingresa la fracción</h2>
-    <input type="number" id="numerador" placeholder="7">
-    <br>
-    <span style="font-size:30px;">―</span>
-    <br>
-    <input type="number" id="denominador" placeholder="3">
-    <br><br>
+    <p>Ingresa la fracción</p>
+    <input type="number" id="numerador" placeholder="7"><br>
+    ―<br>
+    <input type="number" id="denominador" placeholder="3"><br><br>
     <button onclick="convertir()">Convertir</button>
 </div>
 
@@ -109,16 +125,7 @@ function convertir() {
     let salida = document.getElementById("salida");
 
     if (isNaN(n) || isNaN(d) || d === 0) {
-        salida.innerHTML = "<p class='error'>⚠️ Ingresa números válidos. El denominador no puede ser 0.</p>";
-        return;
-    }
-
-    if (n < d) {
-        salida.innerHTML = `
-            <p>🤔 Esta fracción es propia:</p>
-            <p class="resultado">${n} / ${d}</p>
-            <p>No se convierte en número mixto.</p>
-        `;
+        salida.innerHTML = "<p class='error'>⚠️ Datos incorrectos</p>";
         return;
     }
 
@@ -126,21 +133,29 @@ function convertir() {
     let residuo = n % d;
 
     salida.innerHTML = `
-        <h2>📐 División larga</h2>
+        <h3>📐 División larga</h3>
 
-        <div class="division">
+        <div class="division-larga">
             <div class="divisor">${d}</div>
-            <div class="linea-vertical">
-                <div class="linea-horizontal">${entero}</div>
+            <div class="caja-division">
+                <div class="cociente">${entero}</div>
                 <div>${n}</div>
             </div>
         </div>
 
-        <p><strong>${d} × ${entero} = ${d * entero}</strong></p>
-        <p><strong>${n} − ${d * entero} = ${residuo}</strong></p>
+        <p>${d} × ${entero} = ${d * entero}</p>
+        <p>${n} − ${d * entero} = ${residuo}</p>
 
-        <h2>🎉 Número mixto</h2>
-        <p class="resultado">${entero} ${residuo} / ${d}</p>
+        <h3>🎉 Número mixto</h3>
+
+        <div class="mixto resultado">
+            ${entero}
+            <div class="fraccion">
+                <span>${residuo}</span>
+                <div class="linea-fraccion"></div>
+                <span>${d}</span>
+            </div>
+        </div>
     `;
 }
 </script>
