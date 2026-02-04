@@ -1,92 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Fracción a Número Mixto</title>
-    <style>
-        body {
-            font-family: Comic Sans MS, Arial, sans-serif;
-            background-color: #f0f8ff;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            color: #2a7ae2;
-        }
-        .caja {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 15px auto;
-            width: 80%;
-            box-shadow: 0 0 10px #ccc;
-        }
-        input {
-            width: 80px;
-            font-size: 18px;
-            text-align: center;
-            margin: 5px;
-            border-radius: 8px;
-            border: 1px solid #aaa;
-        }
-        button {
-            background-color: #2a7ae2;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            font-size: 16px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #1d5bbf;
-        }
-        .resultado {
-            font-size: 22px;
-            color: green;
-            font-weight: bold;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Fracción a Número Mixto</title>
+
+<style>
+body {
+    font-family: Comic Sans MS, Arial, sans-serif;
+    background-color: #f5faff;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #2a7ae2;
+}
+
+.caja {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0 0 10px #ccc;
+}
+
+input {
+    width: 80px;
+    font-size: 20px;
+    text-align: center;
+    margin: 5px;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+}
+
+button {
+    background-color: #2a7ae2;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1d5bbf;
+}
+
+/* División larga */
+.division {
+    display: inline-flex;
+    align-items: flex-start;
+    font-size: 26px;
+    margin-top: 15px;
+}
+
+.divisor {
+    padding-right: 10px;
+}
+
+.linea-vertical {
+    border-left: 3px solid black;
+    padding-left: 10px;
+}
+
+.linea-horizontal {
+    border-top: 3px solid black;
+    width: 60px;
+    margin-bottom: 5px;
+}
+
+.resultado {
+    font-size: 24px;
+    color: green;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+</style>
 </head>
+
 <body>
 
-<h1>📐 Fracción a Número Mixto</h1>
-<p>Ingresa la fracción y aprende paso a paso 😊</p>
+<h1>📘 Fracción a Número Mixto</h1>
+<p>Aprendemos como en el cuaderno 😊</p>
 
 <div class="caja">
     <h2>✏️ Ingresa la fracción</h2>
-    <input type="number" id="numerador" placeholder="Numerador">
+    <input type="number" id="numerador" placeholder="7">
     <br>
     <span style="font-size:30px;">―</span>
     <br>
-    <input type="number" id="denominador" placeholder="Denominador">
+    <input type="number" id="denominador" placeholder="3">
     <br><br>
     <button onclick="convertir()">Convertir</button>
 </div>
 
-<div class="caja" id="pasos"></div>
+<div class="caja" id="salida"></div>
 
 <script>
 function convertir() {
     let n = parseInt(document.getElementById("numerador").value);
     let d = parseInt(document.getElementById("denominador").value);
-    let pasos = document.getElementById("pasos");
+    let salida = document.getElementById("salida");
 
     if (isNaN(n) || isNaN(d) || d === 0) {
-        pasos.innerHTML = "<p class='error'>⚠️ Ingresa números válidos y recuerda que el denominador no puede ser 0.</p>";
+        salida.innerHTML = "<p class='error'>⚠️ Ingresa números válidos. El denominador no puede ser 0.</p>";
         return;
     }
 
     if (n < d) {
-        pasos.innerHTML = `
-            <h2>🤔 Atención</h2>
-            <p>Esta es una fracción propia.</p>
+        salida.innerHTML = `
+            <p>🤔 Esta fracción es propia:</p>
             <p class="resultado">${n} / ${d}</p>
-            <p>No se puede convertir en número mixto.</p>
+            <p>No se convierte en número mixto.</p>
         `;
         return;
     }
@@ -94,18 +125,22 @@ function convertir() {
     let entero = Math.floor(n / d);
     let residuo = n % d;
 
-    pasos.innerHTML = `
-        <h2>📘 Paso a paso</h2>
-        <p><strong>Paso 1:</strong> Dividimos ${n} ÷ ${d}</p>
-        <p>👉 El resultado es <strong>${entero}</strong></p>
-        <p>👉 Sobra <strong>${residuo}</strong></p>
+    salida.innerHTML = `
+        <h2>📐 División larga</h2>
 
-        <p><strong>Paso 2:</strong> Formamos el número mixto</p>
-        <p>✔ Parte entera: ${entero}</p>
-        <p>✔ Fracción: ${residuo} / ${d}</p>
+        <div class="division">
+            <div class="divisor">${d}</div>
+            <div class="linea-vertical">
+                <div class="linea-horizontal">${entero}</div>
+                <div>${n}</div>
+            </div>
+        </div>
 
-        <h2>🎉 Resultado final</h2>
-        <p class="resultado">${n} / ${d} = ${entero} ${residuo} / ${d}</p>
+        <p><strong>${d} × ${entero} = ${d * entero}</strong></p>
+        <p><strong>${n} − ${d * entero} = ${residuo}</strong></p>
+
+        <h2>🎉 Número mixto</h2>
+        <p class="resultado">${entero} ${residuo} / ${d}</p>
     `;
 }
 </script>
