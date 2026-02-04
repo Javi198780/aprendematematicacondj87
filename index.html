@@ -8,11 +8,7 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background: #f7f7f7;
-}
-
-h1 {
-    color: #333;
+    background: #f5f5f5;
 }
 
 input {
@@ -23,74 +19,81 @@ input {
 
 button {
     font-size: 18px;
-    padding: 5px 15px;
+    padding: 6px 16px;
     margin-top: 10px;
     cursor: pointer;
 }
 
-.contenedor {
-    margin-top: 30px;
-}
-
-/* ===== DIVISIÓN LARGA ===== */
+/* ===== DIVISIÓN LARGA (FORMA CUADERNO EXACTA) ===== */
 .division {
-    display: inline-grid;
-    grid-template-columns: 60px 20px 60px;
-    grid-template-rows: auto auto auto;
-    font-size: 26px;
-    align-items: center;
-    justify-items: center;
-    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 90px 10px 90px;
+    grid-template-rows: auto auto auto auto auto;
+    font-size: 28px;
+    margin: 25px auto;
+    width: 200px;
 }
 
-.divisor {
+.num {
     grid-column: 1;
     grid-row: 1;
 }
 
-.linea-vertical {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-    width: 4px;
-    background: black;
-    height: 120px;
+.div {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.linea-h-der {
+    grid-column: 3;
+    grid-row: 2;
+    border-top: 4px solid black;
+    width: 90px;
+    margin: auto;
 }
 
 .cociente {
     grid-column: 3;
-    grid-row: 1;
+    grid-row: 3;
 }
 
-.linea-horizontal {
-    grid-column: 3;
-    grid-row: 2;
-    width: 60px;
-    height: 4px;
+.linea-vertical {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    width: 4px;
     background: black;
+    margin: auto;
 }
 
-.residuo {
+.resta {
     grid-column: 1;
     grid-row: 3;
 }
 
-/* ===== OPERACIONES ===== */
-.operaciones {
-    font-size: 18px;
-    margin-top: 15px;
+.linea-h-izq {
+    grid-column: 1;
+    grid-row: 4;
+    border-top: 4px solid black;
+    width: 60px;
+    margin: auto;
+}
+
+.res {
+    grid-column: 1;
+    grid-row: 5;
 }
 
 /* ===== NÚMERO MIXTO ===== */
 .mixto-contenedor {
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    margin-top: 15px;
 }
 
 .entero {
-    font-size: 32px;
-    margin-right: 10px;
+    font-size: 34px;
+    margin-right: 12px;
 }
 
 .fraccion {
@@ -101,7 +104,7 @@ button {
 }
 
 .linea-fraccion {
-    width: 30px;
+    width: 32px;
     border-top: 3px solid black;
     margin: 3px 0;
 }
@@ -115,22 +118,17 @@ button {
 <p>
 Numerador:
 <input type="number" id="num" value="7">
-&nbsp;&nbsp;
 Denominador:
 <input type="number" id="den" value="3">
 </p>
 
 <button onclick="calcular()">Convertir</button>
 
-<div class="contenedor">
-    <h2>✏️ División larga</h2>
-    <div id="division"></div>
+<h2>✏️ División larga</h2>
+<div id="division"></div>
 
-    <div class="operaciones" id="operaciones"></div>
-
-    <h2>🎉 Número mixto</h2>
-    <div id="mixto"></div>
-</div>
+<h2>🎉 Número mixto</h2>
+<div id="mixto"></div>
 
 <script>
 function calcular() {
@@ -146,24 +144,23 @@ function calcular() {
     const residuo = n % d;
     const producto = cociente * d;
 
-    // DIVISIÓN LARGA
     document.getElementById("division").innerHTML = `
         <div class="division">
-            <div class="divisor">${n}</div>
+            <div class="num">${n}</div>
             <div class="linea-vertical"></div>
-            <div class="cociente">${d}</div>
-            <div class="linea-horizontal"></div>
-            <div class="residuo">${residuo}</div>
+            <div class="div">${d}</div>
+
+            <div class="linea-h-der"></div>
+
+            <div class="resta">-${producto}</div>
+            <div class="cociente">${cociente}</div>
+
+            <div class="linea-h-izq"></div>
+
+            <div class="res">${residuo}</div>
         </div>
     `;
 
-    // OPERACIONES
-    document.getElementById("operaciones").innerHTML = `
-        ${d} × ${cociente} = ${producto}<br>
-        ${n} − ${producto} = ${residuo}
-    `;
-
-    // NÚMERO MIXTO
     if (residuo === 0) {
         document.getElementById("mixto").innerHTML = `
             <div class="mixto-contenedor">
@@ -187,5 +184,6 @@ function calcular() {
 
 </body>
 </html>
+
 
 
