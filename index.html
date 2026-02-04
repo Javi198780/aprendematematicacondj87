@@ -24,7 +24,22 @@ button {
     cursor: pointer;
 }
 
-/* ===== DIVISIÓN LARGA (FORMA CUADERNO EXACTA) ===== */
+/* ===== FRACCIÓN INICIAL (ESTILO CUADERNO) ===== */
+.fraccion-vertical {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 28px;
+    margin: 15px auto;
+}
+
+.fraccion-linea {
+    width: 40px;
+    border-top: 4px solid black;
+    margin: 4px 0;
+}
+
+/* ===== DIVISIÓN LARGA ===== */
 .division {
     display: grid;
     grid-template-columns: 90px 10px 90px;
@@ -64,7 +79,6 @@ button {
     background: black;
     align-self: stretch;
 }
-
 
 .resta {
     grid-column: 1;
@@ -112,17 +126,26 @@ button {
 </style>
 </head>
 
-<body>
+<body onload="actualizarFraccion()">
 
 <h1>Convertir fracción a número mixto</h1>
 
 <p>
 Numerador:
-<input type="number" id="num" value="7">
+<input type="number" id="num" value="6" oninput="actualizarFraccion()">
 Denominador:
-<input type="number" id="den" value="3">
+<input type="number" id="den" value="2" oninput="actualizarFraccion()">
 </p>
 
+<!-- FRACCIÓN INICIAL -->
+<h2>📘 Fracción inicial</h2>
+<div class="fraccion-vertical">
+    <div id="numVista">6</div>
+    <div class="fraccion-linea"></div>
+    <div id="denVista">2</div>
+</div>
+
+<br>
 <button onclick="calcular()">Convertir</button>
 
 <h2>✏️ División larga</h2>
@@ -132,6 +155,14 @@ Denominador:
 <div id="mixto"></div>
 
 <script>
+function actualizarFraccion() {
+    document.getElementById("numVista").textContent =
+        document.getElementById("num").value || 0;
+
+    document.getElementById("denVista").textContent =
+        document.getElementById("den").value || 1;
+}
+
 function calcular() {
     const n = parseInt(document.getElementById("num").value);
     const d = parseInt(document.getElementById("den").value);
@@ -145,6 +176,7 @@ function calcular() {
     const residuo = n % d;
     const producto = cociente * d;
 
+    // DIVISIÓN LARGA
     document.getElementById("division").innerHTML = `
         <div class="division">
             <div class="num">${n}</div>
@@ -162,6 +194,7 @@ function calcular() {
         </div>
     `;
 
+    // NÚMERO MIXTO
     if (residuo === 0) {
         document.getElementById("mixto").innerHTML = `
             <div class="mixto-contenedor">
@@ -185,6 +218,5 @@ function calcular() {
 
 </body>
 </html>
-
 
 
