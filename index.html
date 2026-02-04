@@ -18,7 +18,7 @@ h2{
 
 .caja{
     background:white;
-    width:300px;
+    width:340px;
     margin:20px auto;
     padding:15px;
     border-radius:15px;
@@ -42,51 +42,40 @@ button{
     cursor:pointer;
 }
 
-/* ===== DIVISIÓN LARGA TIPO CUADERNO ===== */
-.division-cuaderno{
-    position:relative;
-    display:inline-block;
+/* ===== DIVISIÓN LARGA ESCOLAR ===== */
+.division-escolar{
+    display:grid;
+    grid-template-columns: 60px 20px 60px;
+    grid-template-rows: auto auto auto auto;
     font-size:28px;
-    margin:20px;
-    height:90px;
-    width:90px;
+    margin:20px auto;
+    width:160px;
 }
 
-.cociente{
-    position:absolute;
-    top:0;
-    left:35px;
-}
-
-.divisor{
-    position:absolute;
-    top:45px;
-    left:0;
-}
-
-.dividendo{
-    position:absolute;
-    top:45px;
-    left:35px;
-}
-
-.linea-vertical{
-    position:absolute;
-    top:35px;
-    left:30px;
-    height:45px;
+.division-escolar .vline{
+    grid-row: 1 / 5;
+    grid-column: 2;
     border-left:4px solid black;
+    margin:auto;
 }
 
-.linea-horizontal{
-    position:absolute;
-    top:35px;
-    left:30px;
-    width:45px;
+.division-escolar .hline{
+    grid-column: 1 / 2;
     border-top:4px solid black;
+    margin-top:4px;
 }
 
-/* ===== NÚMERO MIXTO REAL ===== */
+.num{
+    text-align:center;
+}
+
+.resultado{
+    color:green;
+    font-weight:bold;
+    font-size:28px;
+}
+
+/* ===== NÚMERO MIXTO ===== */
 .mixto{
     display:inline-flex;
     align-items:center;
@@ -104,11 +93,6 @@ button{
     width:30px;
     border-top:3px solid black;
     margin:2px 0;
-}
-
-.resultado{
-    color:green;
-    font-weight:bold;
 }
 
 .error{
@@ -143,23 +127,29 @@ function convertir(){
         return;
     }
 
-    if(n < d){
-        salida.innerHTML = "<p>🤔 Esta fracción no se convierte en número mixto</p>";
-        return;
-    }
-
     let entero = Math.floor(n / d);
     let residuo = n % d;
+    let resta = n - d * entero;
 
     salida.innerHTML = `
         <h3>✏️ División larga</h3>
 
-        <div class="division-cuaderno">
-            <div class="cociente">${entero}</div>
-            <div class="divisor">${d}</div>
-            <div class="linea-vertical"></div>
-            <div class="linea-horizontal"></div>
-            <div class="dividendo">${n}</div>
+        <div class="division-escolar">
+            <div class="num">${n}</div>
+            <div class="vline"></div>
+            <div class="num">${d}</div>
+
+            <div class="num">-${d * entero}</div>
+            <div></div>
+            <div></div>
+
+            <div class="hline"></div>
+            <div></div>
+            <div></div>
+
+            <div class="num">${residuo}</div>
+            <div></div>
+            <div class="num">${entero}</div>
         </div>
 
         <p>${d} × ${entero} = ${d * entero}</p>
