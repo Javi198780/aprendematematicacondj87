@@ -24,19 +24,18 @@ button {
     cursor: pointer;
 }
 
-/* ===== COLORES DIDÁCTICOS ===== */
-.color-num { color: #1e88e5; }   /* azul */
-.color-den { color: #2e7d32; }   /* verde */
-.color-coc { color: #6a1b9a; }   /* morado */
-.color-res { color: #c62828; }   /* rojo */
+/* ===== COLORES ===== */
+.color-num { color: #1e88e5; }
+.color-den { color: #2e7d32; }
+.color-coc { color: #6a1b9a; }
+.color-res { color: #c62828; }
 
-/* ===== FRACCIÓN INICIAL ===== */
+/* ===== FRACCIÓN ===== */
 .fraccion-vertical {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     font-size: 28px;
-    margin: 15px auto;
 }
 
 .fraccion-linea {
@@ -45,12 +44,12 @@ button {
     margin: 4px 0;
 }
 
-/* ===== BARRAS DE FRACCIÓN ===== */
+/* ===== BARRAS ===== */
 .barras-fraccion {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin: 20px auto;
+    margin: 15px auto;
 }
 
 .barra {
@@ -73,28 +72,53 @@ button {
     border-right: none;
 }
 
-/* ===== DIVISIÓN LARGA ===== */
+/* ===== RECTA NUMÉRICA ===== */
+.recta-contenedor {
+    width: 500px;
+    margin: 30px auto;
+}
+
+.recta {
+    position: relative;
+    height: 4px;
+    background: black;
+}
+
+.marca {
+    position: absolute;
+    top: -8px;
+    width: 2px;
+    height: 20px;
+    background: black;
+}
+
+.etiqueta {
+    position: absolute;
+    top: 14px;
+    transform: translateX(-50%);
+    font-size: 14px;
+}
+
+.punto {
+    position: absolute;
+    top: -12px;
+    width: 14px;
+    height: 14px;
+    background: #1e88e5;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    transition: left 1s ease;
+}
+
+/* ===== DIVISIÓN ===== */
 .division {
     display: grid;
     grid-template-columns: 90px 10px 90px;
     grid-template-rows: auto auto auto auto auto;
     font-size: 28px;
-    margin: 25px auto;
+    margin: 20px auto;
     width: 200px;
 }
-
-.num { grid-column: 1; grid-row: 1; }
-.div { grid-column: 3; grid-row: 1; }
-
-.linea-h-der {
-    grid-column: 3;
-    grid-row: 2;
-    border-top: 4px solid black;
-    width: 90px;
-    margin: auto;
-}
-
-.cociente { grid-column: 3; grid-row: 3; }
 
 .linea-vertical {
     grid-column: 2;
@@ -103,17 +127,17 @@ button {
     background: black;
 }
 
-.resta { grid-column: 1; grid-row: 3; }
+.linea-h-der {
+    grid-column: 3;
+    grid-row: 2;
+    border-top: 4px solid black;
+}
 
 .linea-h-izq {
     grid-column: 1;
     grid-row: 4;
     border-top: 4px solid black;
-    width: 60px;
-    margin: auto;
 }
-
-.res { grid-column: 1; grid-row: 5; }
 
 /* ===== NÚMERO MIXTO ===== */
 .mixto-contenedor {
@@ -138,133 +162,145 @@ button {
 .linea-fraccion {
     width: 32px;
     border-top: 3px solid black;
-    margin: 3px 0;
 }
 
 /* ===== ANIMACIÓN ===== */
-.paso {
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
-.paso.visible {
-    opacity: 1;
-}
+.paso { opacity: 0; transition: opacity 0.8s; }
+.paso.visible { opacity: 1; }
 </style>
 </head>
 
-<body onload="actualizarFraccion()">
+<body onload="actualizarTodo()">
 
-<h1>Convertir fracción a número mixto</h1>
+<h1>Fracción → Número Mixto</h1>
 
 <p>
 Numerador:
-<input type="number" id="num" value="7" oninput="actualizarFraccion()">
+<input type="number" id="num" value="7" oninput="actualizarTodo()">
 Denominador:
-<input type="number" id="den" value="3" oninput="actualizarFraccion()">
+<input type="number" id="den" value="3" oninput="actualizarTodo()">
 </p>
 
-<h2>📘 Fracción inicial</h2>
+<h2>Fracción</h2>
 <div class="fraccion-vertical">
     <div id="numVista" class="color-num">7</div>
     <div class="fraccion-linea"></div>
     <div id="denVista" class="color-den">3</div>
 </div>
 
-<h2>🧱 Representación con barras</h2>
+<h2>Barras de fracción</h2>
 <div id="barras" class="barras-fraccion"></div>
+
+<h2>Recta numérica</h2>
+<div class="recta-contenedor">
+    <div class="recta" id="recta"></div>
+</div>
 
 <button onclick="calcular()">Convertir</button>
 
-<h2>🎨 Leyenda de colores</h2>
-<div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
-    <span class="color-num">🔵 Numerador</span>
-    <span class="color-den">🟢 Denominador</span>
-    <span class="color-coc">🟣 Cociente</span>
-    <span class="color-res">🔴 Residuo</span>
-</div>
-
-<h2>✏️ División larga</h2>
+<h2>División</h2>
 <div id="division"></div>
 
-<h2>🎉 Número mixto</h2>
+<h2>Número mixto</h2>
 <div id="mixto"></div>
 
 <script>
-function actualizarFraccion() {
+function actualizarTodo() {
     numVista.textContent = num.value || 0;
     denVista.textContent = den.value || 1;
-    mostrarBarras(parseInt(num.value), parseInt(den.value));
+    mostrarBarras();
+    dibujarRecta();
 }
 
-function mostrarBarras(n, d) {
-    const cont = document.getElementById("barras");
-    cont.innerHTML = "";
-    if (!d || d <= 0) return;
+function mostrarBarras() {
+    const n = +num.value;
+    const d = +den.value;
+    barras.innerHTML = "";
+    if (d <= 0) return;
 
-    const completas = Math.floor(n / d);
+    const enteros = Math.floor(n / d);
     const resto = n % d;
 
-    for (let i = 0; i < completas; i++) {
-        const barra = document.createElement("div");
-        barra.className = "barra";
-        for (let j = 0; j < d; j++) {
-            const p = document.createElement("div");
-            p.className = "parte pintada";
-            barra.appendChild(p);
+    for (let i = 0; i < enteros; i++) {
+        barras.appendChild(crearBarra(d, d));
+    }
+    if (resto > 0) {
+        barras.appendChild(crearBarra(d, resto));
+    }
+}
+
+function crearBarra(d, pintadas) {
+    const barra = document.createElement("div");
+    barra.className = "barra";
+    for (let i = 0; i < d; i++) {
+        const p = document.createElement("div");
+        p.className = "parte" + (i < pintadas ? " pintada" : "");
+        barra.appendChild(p);
+    }
+    return barra;
+}
+
+function dibujarRecta() {
+    const n = +num.value;
+    const d = +den.value;
+    recta.innerHTML = "";
+    if (d <= 0) return;
+
+    const total = Math.max(1, Math.ceil(n / d));
+    const pasos = total * d;
+    const ancho = recta.offsetWidth;
+
+    for (let i = 0; i <= pasos; i++) {
+        const marca = document.createElement("div");
+        marca.className = "marca";
+        marca.style.left = (i / pasos * ancho) + "px";
+        recta.appendChild(marca);
+
+        if (i % d === 0) {
+            const et = document.createElement("div");
+            et.className = "etiqueta";
+            et.textContent = i / d;
+            et.style.left = (i / pasos * ancho) + "px";
+            recta.appendChild(et);
         }
-        cont.appendChild(barra);
     }
 
-    if (resto > 0) {
-        const barra = document.createElement("div");
-        barra.className = "barra";
-        for (let j = 0; j < d; j++) {
-            const p = document.createElement("div");
-            p.className = "parte" + (j < resto ? " pintada" : "");
-            barra.appendChild(p);
-        }
-        cont.appendChild(barra);
-    }
+    const punto = document.createElement("div");
+    punto.className = "punto";
+    punto.style.left = (n / pasos * ancho) + "px";
+    recta.appendChild(punto);
 }
 
 function calcular() {
-    const n = parseInt(num.value);
-    const d = parseInt(den.value);
-    if (d === 0) return alert("El denominador no puede ser 0");
+    const n = +num.value;
+    const d = +den.value;
+    if (d === 0) return alert("Denominador inválido");
 
-    const cociente = Math.floor(n / d);
-    const residuo = n % d;
-    const producto = cociente * d;
+    const c = Math.floor(n / d);
+    const r = n % d;
 
     division.innerHTML = `
-        <div class="division">
-            <div class="num color-num paso" id="p1">${n}</div>
-            <div class="linea-vertical paso" id="p2"></div>
-            <div class="div color-den paso" id="p3">${d}</div>
-            <div class="linea-h-der paso" id="p4"></div>
-            <div class="cociente color-coc paso" id="p5">${cociente}</div>
-            <div class="resta color-den paso" id="p6">-${producto}</div>
-            <div class="linea-h-izq paso" id="p7"></div>
-            <div class="res color-res paso" id="p8">${residuo}</div>
-        </div>
-    `;
+    <div class="division">
+        <div class="color-num">${n}</div>
+        <div class="linea-vertical"></div>
+        <div class="color-den">${d}</div>
+        <div></div><div class="linea-h-der"></div>
+        <div class="color-coc">${c}</div>
+        <div class="color-den">-${c*d}</div>
+        <div></div><div class="linea-h-izq"></div>
+        <div class="color-res">${r}</div>
+    </div>`;
 
-    mixto.innerHTML = "";
-    const pasos = ["p1","p2","p3","p4","p5","p6","p7","p8"];
-    pasos.forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add("visible"),i*700));
-
-    setTimeout(()=>{
-        mixto.innerHTML = residuo===0
-        ? `<div class="mixto-contenedor paso visible"><div class="entero color-coc">${cociente}</div></div>`
-        : `<div class="mixto-contenedor paso visible">
-              <div class="entero color-coc">${cociente}</div>
-              <div class="fraccion">
-                  <div class="color-res">${residuo}</div>
-                  <div class="linea-fraccion"></div>
-                  <div class="color-den">${d}</div>
-              </div>
-           </div>`;
-    }, pasos.length*700);
+    mixto.innerHTML = r === 0
+    ? `<div class="entero color-coc">${c}</div>`
+    : `<div class="mixto-contenedor">
+          <div class="entero color-coc">${c}</div>
+          <div class="fraccion">
+            <div class="color-res">${r}</div>
+            <div class="linea-fraccion"></div>
+            <div class="color-den">${d}</div>
+          </div>
+       </div>`;
 }
 </script>
 
