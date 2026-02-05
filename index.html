@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Matemática Divertida – 6.º de Básica</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#e3f2fd, #ffffff);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+header{
+    background:#1e88e5;
+    color:white;
+    padding:20px;
+}
+
+h1{
+    margin:0;
+}
+
+.contenedor{
+    max-width:900px;
+    margin:30px auto;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+    gap:25px;
+    padding:20px;
+}
+
+.tarjeta{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 6px 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+}
+
+.tarjeta:hover{
+    transform: scale(1.05);
+}
+
+.icono{
+    font-size:60px;
+}
+
+.tarjeta h2{
+    color:#333;
+}
+
+.tarjeta p{
+    font-size:16px;
+    color:#555;
+}
+
+.boton{
+    display:inline-block;
+    margin-top:15px;
+    padding:10px 20px;
+    font-size:18px;
+    border-radius:12px;
+    text-decoration:none;
+    color:white;
+}
+
+.boton-fraccion{
+    background:#6a1b9a;
+}
+
+.boton-rectas{
+    background:#2e7d32;
+}
+
+footer{
+    background:#f5f5f5;
+    padding:15px;
+    font-size:14px;
+    color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Matemática Divertida</h1>
+    <p>Aprendemos jugando – 6.º de Básica</p>
+</header>
+
+<div class="contenedor">
+
+    <!-- TARJETA FRACCIÓN A MIXTO -->
+    <div class="tarjeta">
+        <div class="icono">🍰</div>
+        <h2>Fracción a Número Mixto</h2>
+        <p>
+            Aprende paso a paso a convertir una fracción impropia en número mixto  
+            usando dibujos, barras, recta numérica y división.
+        </p>
+        <a href="fraccion-a-mixto.html" class="boton boton-fraccion">
+            Entrar
+        </a>
+    </div>
+
+    <!-- TARJETA RECTAS -->
+    <div class="tarjeta">
+        <div class="icono">📐</div>
+        <h2>Juego de las Rectas</h2>
+        <p>
+            Identifica rectas paralelas, secantes y perpendiculares  
+            con un juego interactivo y hoja imprimible.
+        </p>
+        <a href="juego-rectas-imprimible.html" class="boton boton-rectas">
+        <a href="fraccion_mixto.html" class="boton boton-rectas">
+            Jugar
+        </a>
+    </div>
+
+</div>
+
+<footer>
+    👩‍🏫 Material educativo – Matemática 6.º de Básica  
+    <br>
+    Hecho con ❤️ para aprender mejor
+</footer>
+
+</body>
+</html>
