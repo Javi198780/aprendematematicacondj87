@@ -25,10 +25,10 @@ button {
 }
 
 /* ===== COLORES DIDÁCTICOS ===== */
-.color-num { color: #1e88e5; }
-.color-den { color: #2e7d32; }
-.color-coc { color: #6a1b9a; }
-.color-res { color: #c62828; }
+.color-num { color: #1e88e5; }   /* azul */
+.color-den { color: #2e7d32; }   /* verde */
+.color-coc { color: #6a1b9a; }   /* morado */
+.color-res { color: #c62828; }   /* rojo */
 
 /* ===== FRACCIÓN INICIAL ===== */
 .fraccion-vertical {
@@ -45,7 +45,7 @@ button {
     margin: 4px 0;
 }
 
-/* ===== BARRAS ===== */
+/* ===== BARRAS DE FRACCIÓN ===== */
 .barras-fraccion {
     display: flex;
     justify-content: center;
@@ -73,7 +73,7 @@ button {
     border-right: none;
 }
 
-/* ===== DIVISIÓN ===== */
+/* ===== DIVISIÓN LARGA ===== */
 .division {
     display: grid;
     grid-template-columns: 90px 10px 90px;
@@ -83,12 +83,8 @@ button {
     width: 200px;
 }
 
-.linea-vertical {
-    grid-column: 2;
-    grid-row: 1 / span 5;
-    width: 4px;
-    background: black;
-}
+.num { grid-column: 1; grid-row: 1; }
+.div { grid-column: 3; grid-row: 1; }
 
 .linea-h-der {
     grid-column: 3;
@@ -98,6 +94,17 @@ button {
     margin: auto;
 }
 
+.cociente { grid-column: 3; grid-row: 3; }
+
+.linea-vertical {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    width: 4px;
+    background: black;
+}
+
+.resta { grid-column: 1; grid-row: 3; }
+
 .linea-h-izq {
     grid-column: 1;
     grid-row: 4;
@@ -106,7 +113,9 @@ button {
     margin: auto;
 }
 
-/* ===== MIXTO ===== */
+.res { grid-column: 1; grid-row: 5; }
+
+/* ===== NÚMERO MIXTO ===== */
 .mixto-contenedor {
     display: flex;
     justify-content: center;
@@ -178,27 +187,6 @@ button {
     transform: translateX(-50%);
     transition: left 1s ease;
 }
-
-/* ===== IMPRESIÓN ===== */
-@media print {
-    body {
-        background: white;
-    }
-
-    input, button {
-        display: none;
-    }
-
-    h1 {
-        font-size: 22px;
-        margin-bottom: 5px;
-    }
-
-    h2 {
-        font-size: 18px;
-        margin-top: 12px;
-    }
-}
 </style>
 </head>
 
@@ -229,7 +217,14 @@ Denominador:
 </div>
 
 <button onclick="calcular()">Convertir</button>
-<button onclick="window.print()">🖨️ Imprimir</button>
+
+<h2>🎨 Leyenda de colores</h2>
+<div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+    <span class="color-num">🔵 Numerador</span>
+    <span class="color-den">🟢 Denominador</span>
+    <span class="color-coc">🟣 Cociente</span>
+    <span class="color-res">🔴 Residuo</span>
+</div>
 
 <h2>✏️ División larga</h2>
 <div id="division"></div>
@@ -250,7 +245,8 @@ function actualizarFraccion() {
 }
 
 function mostrarBarras(n, d) {
-    barras.innerHTML = "";
+    const cont = document.getElementById("barras");
+    cont.innerHTML = "";
     if (!d || d <= 0) return;
 
     const completas = Math.floor(n / d);
@@ -260,27 +256,33 @@ function mostrarBarras(n, d) {
         const barra = document.createElement("div");
         barra.className = "barra";
         for (let j = 0; j < d; j++) {
-            barra.innerHTML += `<div class="parte pintada"></div>`;
+            const p = document.createElement("div");
+            p.className = "parte pintada";
+            barra.appendChild(p);
         }
-        barras.appendChild(barra);
+        cont.appendChild(barra);
     }
 
     if (resto > 0) {
         const barra = document.createElement("div");
         barra.className = "barra";
         for (let j = 0; j < d; j++) {
-            barra.innerHTML += `<div class="parte ${j < resto ? "pintada" : ""}"></div>`;
+            const p = document.createElement("div");
+            p.className = "parte" + (j < resto ? " pintada" : "");
+            barra.appendChild(p);
         }
-        barras.appendChild(barra);
+        cont.appendChild(barra);
     }
 }
 
 function dibujarRecta(n, d) {
+    const recta = document.getElementById("recta");
     recta.innerHTML = "";
     if (!d || d <= 0) return;
 
     const ancho = recta.offsetWidth;
-    const pasos = Math.ceil(n / d) * d;
+    const enteros = Math.ceil(n / d);
+    const pasos = enteros * d;
 
     for (let i = 0; i <= pasos; i++) {
         const marca = document.createElement("div");
@@ -308,40 +310,41 @@ function calcular() {
     const d = parseInt(den.value);
     if (d === 0) return alert("El denominador no puede ser 0");
 
-    const c = Math.floor(n / d);
-    const r = n % d;
+    const cociente = Math.floor(n / d);
+    const residuo = n % d;
+    const producto = cociente * d;
 
     division.innerHTML = `
         <div class="division">
-            <div class="color-num paso" id="p1">${n}</div>
+            <div class="num color-num paso" id="p1">${n}</div>
             <div class="linea-vertical paso" id="p2"></div>
-            <div class="color-den paso" id="p3">${d}</div>
+            <div class="div color-den paso" id="p3">${d}</div>
             <div class="linea-h-der paso" id="p4"></div>
-            <div class="color-coc paso" id="p5">${c}</div>
-            <div class="color-den paso" id="p6">-${c*d}</div>
+            <div class="cociente color-coc paso" id="p5">${cociente}</div>
+            <div class="resta color-den paso" id="p6">-${producto}</div>
             <div class="linea-h-izq paso" id="p7"></div>
-            <div class="color-res paso" id="p8">${r}</div>
+            <div class="res color-res paso" id="p8">${residuo}</div>
         </div>
     `;
 
     mixto.innerHTML = "";
-    ["p1","p2","p3","p4","p5","p6","p7","p8"]
-        .forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add("visible"),i*500));
+    const pasos = ["p1","p2","p3","p4","p5","p6","p7","p8"];
+    pasos.forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add("visible"),i*600));
 
     setTimeout(()=>{
-        mixto.innerHTML = r === 0
+        mixto.innerHTML = residuo===0
         ? `<div class="mixto-contenedor paso visible">
-             <div class="entero color-coc">${c}</div>
+              <div class="entero color-coc">${cociente}</div>
            </div>`
         : `<div class="mixto-contenedor paso visible">
-             <div class="entero color-coc">${c}</div>
-             <div class="fraccion">
-                <div class="color-res">${r}</div>
-                <div class="linea-fraccion"></div>
-                <div class="color-den">${d}</div>
-             </div>
+              <div class="entero color-coc">${cociente}</div>
+              <div class="fraccion">
+                  <div class="color-res">${residuo}</div>
+                  <div class="linea-fraccion"></div>
+                  <div class="color-den">${d}</div>
+              </div>
            </div>`;
-    }, 4200);
+    }, pasos.length*600);
 }
 </script>
 
