@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Juego: Tipos de rectas</title>
+
+<style>
+body{
+    font-family:Arial, sans-serif;
+    background:#f0f7ff;
+    text-align:center;
+}
+
+h1{color:#1e88e5;}
+
+button{
+    font-size:18px;
+    padding:10px 18px;
+    margin:6px;
+    cursor:pointer;
+    border-radius:12px;
+    border:none;
+}
+
+.paralela{background:#1e88e5;color:white;}
+.secante{background:#2e7d32;color:white;}
+.perpendicular{background:#c62828;color:white;}
+
+#mensaje{
+    font-size:22px;
+    margin:15px;
+    font-weight:bold;
+}
+
+#puntaje{
+    font-size:20px;
+    margin:10px;
+}
+
+canvas{
+    background:white;
+    border:3px solid black;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎮 Juego: Identifica las rectas</h1>
+<p>Observa el dibujo y elige la respuesta correcta</p>
+
+<div id="puntaje">⭐ Puntos: 0</div>
+
+<canvas id="lienzo" width="350" height="300"></canvas>
+
+<div>
+    <button class="paralela" onclick="responder('paralela')">Paralelas</button>
+    <button class="secante" onclick="responder('secante')">Secantes</button>
+    <button class="perpendicular" onclick="responder('perpendicular')">Perpendiculares</button>
+</div>
+
+<div id="mensaje"></div>
+
+<button onclick="nuevoReto()">🔄 Nuevo dibujo</button>
+
+<script>
+const canvas = document.getElementById("lienzo");
+const ctx = canvas.getContext("2d");
+
+let tipoCorrecto = "";
+let puntos = 0;
+
+function limpiar(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function nuevoReto(){
+    limpiar();
+    mensaje.textContent="";
+    const tipos = ["paralela","secante","perpendicular"];
+    tipoCorrecto = tipos[Math.floor(Math.random()*3)];
+
+    ctx.lineWidth=4;
+
+    if(tipoCorrecto==="paralela"){
+        ctx.strokeStyle="#1e88e5";
+        ctx.beginPath();
+        ctx.moveTo(50,90);
+        ctx.lineTo(300,90);
+        ctx.moveTo(50,150);
+        ctx.lineTo(300,150);
+        ctx.stroke();
+    }
+
+    if(tipoCorrecto==="secante"){
+        ctx.strokeStyle="#2e7d32";
+        ctx.beginPath();
+        ctx.moveTo(50,50);
+        ctx.lineTo(300,200);
+        ctx.moveTo(50,200);
+        ctx.lineTo(300,50);
+        ctx.stroke();
+    }
+
+    if(tipoCorrecto==="perpendicular"){
+        ctx.strokeStyle="#c62828";
+        ctx.beginPath();
+        ctx.moveTo(175,40);
+        ctx.lineTo(175,260);
+        ctx.moveTo(80,150);
+        ctx.lineTo(270,150);
+        ctx.stroke();
+    }
+}
+
+function responder(eleccion){
+    if(eleccion === tipoCorrecto){
+        mensaje.innerHTML="✅ ¡Muy bien! Respuesta correcta 🎉";
+        mensaje.style.color="green";
+        puntos++;
+    }else{
+        mensaje.innerHTML="❌ Intenta otra vez 😊";
+        mensaje.style.color="red";
+    }
+    puntaje.textContent="⭐ Puntos: " + puntos;
+}
+
+nuevoReto();
+</script>
+
+</body>
+</html>
