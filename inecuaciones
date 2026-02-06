@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Resuelve tu Inecuación</title>
+
+<style>
+body {
+    font-family: Arial;
+    background-color: #f0f8ff;
+    text-align: center;
+}
+
+.caja {
+    width: 80%;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+input {
+    width: 60%;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.paso {
+    background-color: #e3f2fd;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="caja">
+    <h1>🧮 Ingresa tu inecuación</h1>
+    <p>Ejemplo: <strong>2x + 4 > 10</strong></p>
+
+    <input id="ecuacion" placeholder="Escribe aquí la inecuación">
+    <br><br>
+    <button onclick="resolver()">Resolver</button>
+
+    <div id="resultado"></div>
+</div>
+
+<script>
+function resolver() {
+    let eq = document.getElementById("ecuacion").value.replace(/\s+/g, "");
+    let salida = document.getElementById("resultado");
+
+    // Ejemplo básico: ax + b > c
+    let regex = /^(-?\d*)x([+-]\d+)([<>]=?)(-?\d+)$/;
+    let m = eq.match(regex);
+
+    if (!m) {
+        salida.innerHTML = "❌ Usa el formato: 2x+4>10";
+        return;
+    }
+
+    let a = m[1] === "" || m[1] === "-" ? (m[1] === "-" ? -1 : 1) : parseInt(m[1]);
+    let b = parseInt(m[2]);
+    let signo = m[3];
+    let c = parseInt(m[4]);
+
+    let paso1 = c - b;
+    let signoFinal = signo;
+
+    if (a < 0) {
+        signoFinal = signo === ">" ? "<" :
+                     signo === "<" ? ">" :
+                     signo === ">=" ? "<=" : ">=";
+    }
+
+    let x = paso1 / a;
+
+    salida.innerHTML = `
+        <div class="paso">🔹 Pasamos ${b} al otro lado<br>
+        ${a}x ${signo} ${paso1}</div>
+
+        <div class="paso">🔹 Dividimos para ${a}</div>
+
+        <div class="paso">⚠️ ${a < 0 ? "El signo cambia porque dividimos para negativo" : "El signo se mantiene"}</div>
+
+        <h2>✅ Resultado: <br>x ${signoFinal} ${x}</h2>
+    `;
+}
+</script>
+
+</body>
+</html>
