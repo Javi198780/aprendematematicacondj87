@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Inecuaciones Paso a Paso</title>
+<title>Inecuaciones paso a paso</title>
 
 <style>
 body{
@@ -12,7 +12,7 @@ body{
 }
 
 .caja{
-    width:80%;
+    width:85%;
     margin:auto;
     background:white;
     padding:20px;
@@ -39,7 +39,7 @@ button{
 
 .paso{
     background:#e3f2fd;
-    margin:12px 0;
+    margin:10px 0;
     padding:12px;
     border-radius:10px;
     font-size:17px;
@@ -50,12 +50,12 @@ button{
 <body>
 
 <div class="caja">
-    <h1>🧮 Resolver Inecuaciones</h1>
-    <p>Ejemplo: <strong>7(x+2) &gt; 4x+8</strong></p>
+    <h1>🧮 Resolver inecuaciones paso a paso</h1>
+    <p>Ejemplo: <strong>7x+14 &gt; 4x+8</strong></p>
 
     <input id="ecuacion" placeholder="Escribe la inecuación">
     <br><br>
-    <button onclick="resolver()">Resolver paso a paso</button>
+    <button onclick="resolver()">Resolver</button>
 
     <div id="resultado"></div>
 </div>
@@ -65,73 +65,61 @@ function resolver(){
     let eq = document.getElementById("ecuacion").value.replace(/\s+/g,"");
     let r = document.getElementById("resultado");
 
-    // a(x+b)>cx+d
-    let regex = /^(-?\d+)\(x([+-]\d+)\)([<>]=?)(-?\d+)x([+-]\d+)$/;
+    // ax+b>cx+d
+    let regex = /^(-?\d*)x([+-]\d+)([<>]=?)(-?\d*)x([+-]\d+)$/;
     let m = eq.match(regex);
 
     if(!m){
-        r.innerHTML = "❌ Usa el formato: 7(x+2)>4x+8";
+        r.innerHTML = "❌ Usa el formato: 7x+14>4x+8";
         return;
     }
 
-    let a = parseInt(m[1]);
+    let a = m[1]==="" ? 1 : (m[1]==="-" ? -1 : parseInt(m[1]));
     let b = parseInt(m[2]);
     let signo = m[3];
-    let c = parseInt(m[4]);
+    let c = m[4]==="" ? 1 : (m[4]==="-" ? -1 : parseInt(m[4]));
     let d = parseInt(m[5]);
 
-    // Paso distributiva
-    let ax = a;
-    let ab = a * b;
+    // Paso 1: ecuación original
+    let paso1 = `${a}x ${b>=0?"+":""}${b} ${signo} ${c}x ${d>=0?"+":""}${d}`;
 
-    // Paso restar ab
-    let nuevoD = d - ab;
+    // Paso 2: restar b
+    let d1 = d - b;
+    let paso2 = `${a}x ${signo} ${c}x ${d1>=0?"+":""}${d1}`;
 
-    // Paso mover cx
-    let coefX = ax - c;
+    // Paso 3: restar cx
+    let coef = a - c;
+    let paso3 = `${coef}x ${signo} ${d1}`;
 
-    // Paso dividir
-    let resultado = nuevoD / coefX;
+    // Paso 4: dividir
+    let resultado = d1 / coef;
     let signoFinal = signo;
 
-    if(coefX < 0){
+    if(coef < 0){
         signoFinal = signo === ">" ? "<" :
                      signo === "<" ? ">" :
                      signo === ">=" ? "<=" : ">=";
     }
 
     r.innerHTML = `
-        <div class="paso">
-        🔹 Inecuación inicial:<br>
-        ${a}(x ${b>=0?"+":""}${b}) ${signo} ${c}x ${d>=0?"+":""}${d}
-        </div>
+        <div class="paso">🔹 Paso 1 (inecuación inicial):<br>${paso1}</div>
 
-        <div class="paso">
-        🔹 Aplicamos la distributiva:<br>
-        ${ax}x ${ab>=0?"+":""}${ab} ${signo} ${c}x ${d>=0?"+":""}${d}
-        </div>
+        <div class="paso">🔹 Paso 2 (restamos ${b} en ambos lados):<br>
+        ${a}x ${b>=0?"-":"+ "}${Math.abs(b)} ${signo} ${c}x ${d>=0?"-":"+ "}${Math.abs(b)}</div>
 
-        <div class="paso">
-        🔹 Restamos ${ab} en ambos lados:<br>
-        ${ax}x ${signo} ${c}x ${nuevoD>=0?"+":""}${nuevoD}
-        </div>
+        <div class="paso">🔹 Resultado:<br>${paso2}</div>
 
-        <div class="paso">
-        🔹 Pasamos ${c}x al lado izquierdo:<br>
-        ${coefX}x ${signo} ${nuevoD}
-        </div>
+        <div class="paso">🔹 Paso 3 (restamos ${c}x en ambos lados):<br>
+        ${a}x - ${c}x ${signo} ${c}x - ${c}x ${d1>=0?"+":""}${d1}</div>
 
-        <div class="paso">
-        🔹 Dividimos para ${coefX}
-        </div>
+        <div class="paso">🔹 Resultado:<br>${paso3}</div>
 
-        <div class="paso">
-        ⚠️ ${coefX<0 ? "El signo cambia porque dividimos para negativo" : "El signo se mantiene"}
-        </div>
+        <div class="paso">🔹 Paso 4 (dividimos para ${coef}):<br>
+        ${coef}x / ${coef} ${signo} ${d1} / ${coef}</div>
 
-        <h2>✅ Resultado final:<br>
-        x ${signoFinal} ${resultado}
-        </h2>
+        <div class="paso">⚠️ ${coef<0 ? "El signo cambia porque dividimos para negativo" : "El signo se mantiene"}</div>
+
+        <h2>✅ Resultado final:<br>x ${signoFinal} ${resultado}</h2>
     `;
 }
 </script>
