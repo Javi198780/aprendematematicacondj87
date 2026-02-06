@@ -2,106 +2,148 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Inecuaciones paso a paso</title>
+<title>Matemática Divertida – 6.º de Básica</title>
 
 <style>
 body{
-    font-family: Arial;
-    background:#f0f8ff;
-    text-align:center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#e3f2fd, #ffffff);
+    text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
-.caja{
-    width:80%;
-    margin:auto;
-    background:white;
+header{
+    background:#1e88e5;
+    color:white;
     padding:20px;
-    border-radius:15px;
-    box-shadow:0 0 10px #ccc;
 }
 
-input{
-    width:70%;
-    padding:10px;
-    font-size:18px;
-    text-align:center;
+h1{
+    margin:0;
 }
 
-button{
+.contenedor{
+    max-width:900px;
+    margin:30px auto;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+    gap:25px;
+    padding:20px;
+}
+
+.tarjeta{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 6px 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+}
+
+.tarjeta:hover{
+    transform: scale(1.05);
+}
+
+.icono{
+    font-size:60px;
+}
+
+.tarjeta h2{
+    color:#333;
+}
+
+.tarjeta p{
+    font-size:16px;
+    color:#555;
+}
+
+.boton{
+    display:inline-block;
+    margin-top:15px;
     padding:10px 20px;
     font-size:18px;
-    background:#ef6c00;
+    border-radius:12px;
+    text-decoration:none;
     color:white;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
 }
 
-.paso{
-    background:#e3f2fd;
-    margin:10px 0;
-    padding:12px;
-    border-radius:10px;
-    font-size:17px;
+/* Colores de botones */
+.boton-fraccion{
+    background:#6a1b9a;
+}
+
+.boton-rectas{
+    background:#2e7d32;
+}
+
+.boton-inecuaciones{
+    background:#ef6c00;
+}
+
+footer{
+    background:#f5f5f5;
+    padding:15px;
+    font-size:14px;
+    color:#555;
 }
 </style>
 </head>
 
 <body>
 
-<div class="caja">
-    <h1>🧮 Resolver inecuaciones</h1>
-    <p>Ejemplo: <strong>7(x+2) &gt; 4x+8</strong></p>
+<header>
+    <h1>📚 Matemática Divertida</h1>
+    <p>Aprendemos jugando – 6.º de Básica</p>
+</header>
 
-    <input id="ecuacion" value="7(x+2)>4x+8">
-    <br><br>
-    <button onclick="resolver()">Resolver paso a paso</button>
+<div class="contenedor">
 
-    <div id="resultado"></div>
+    <!-- TARJETA FRACCIÓN A MIXTO -->
+    <div class="tarjeta">
+        <div class="icono">🍰</div>
+        <h2>Fracción a Número Mixto</h2>
+        <p>
+            Aprende paso a paso a convertir una fracción impropia en número mixto  
+            usando dibujos, barras y ejemplos sencillos.
+        </p>
+        <a href="fraccion_mixto.html" class="boton boton-fraccion">
+            Entrar
+        </a>
+    </div>
+
+    <!-- TARJETA RECTAS -->
+    <div class="tarjeta">
+        <div class="icono">📐</div>
+        <h2>Juego de las Rectas</h2>
+        <p>
+            Identifica rectas paralelas, secantes y perpendiculares  
+            con un juego interactivo y hoja imprimible.
+        </p>
+        <a href="rectas-paralelas-secantes-perpendiculares.html" class="boton boton-rectas">
+            Jugar
+        </a>
+    </div>
+
+    <!-- TARJETA INECUACIONES -->
+    <div class="tarjeta">
+        <div class="icono">🧮</div>
+        <h2>Inecuaciones Paso a Paso</h2>
+        <p>
+            Ingresa una inecuación sencilla y aprende cómo se despeja  
+            la x con explicaciones claras y ejemplos.
+        </p>
+        <a href="inecuacion.html" class="boton boton-inecuaciones">
+            Resolver
+        </a>
+    </div>
+
 </div>
 
-<script>
-function resolver(){
-    let r = document.getElementById("resultado");
-
-    // Valores fijos del ejemplo (didáctico)
-    let a = 7, b = 2, c = 4, d = 8;
-
-    r.innerHTML = `
-    <div class="paso">🔹 Paso 1:<br>
-    ${a}(x + ${b}) &gt; ${c}x + ${d}
-    </div>
-
-    <div class="paso">🔹 Paso 2 (distributiva):<br>
-    ${a}x + ${a*b} &gt; ${c}x + ${d}
-    </div>
-
-    <div class="paso">🔹 Paso 3 (restamos 14 en ambos lados):<br>
-    ${a}x + 14 − 14 &gt; ${c}x + ${d} − 14
-    </div>
-
-    <div class="paso">🔹 Paso 4:<br>
-    ${a}x &gt; ${c}x − 6
-    </div>
-
-    <div class="paso">🔹 Paso 5 (restamos 4x en ambos lados):<br>
-    ${a}x − 4x &gt; ${c}x − 4x − 6
-    </div>
-
-    <div class="paso">🔹 Paso 6:<br>
-    3x &gt; −6
-    </div>
-
-    <div class="paso">🔹 Paso 7 (dividimos para 3):<br>
-    3x / 3 &gt; −6 / 3
-    </div>
-
-    <div class="paso">🔹 Paso 8 (resultado final):<br>
-    <strong>x &gt; −2</strong>
-    </div>
-    `;
-}
-</script>
+<footer>
+    👩‍🏫 Material educativo – Matemática 6.º de Básica  
+    <br>
+    Hecho con ❤️ para aprender mejor
+</footer>
 
 </body>
 </html>
