@@ -1,128 +1,95 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Inecuaciones paso a paso</title>
-
-<style>
-body{
-    font-family: Arial;
-    background:#f0f8ff;
-    text-align:center;
-}
-
-.caja{
-    width:85%;
-    margin:auto;
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 0 10px #ccc;
-}
-
-input{
-    width:70%;
-    padding:10px;
-    font-size:18px;
-    text-align:center;
-}
-
-button{
-    padding:10px 20px;
-    font-size:18px;
-    background:#ef6c00;
-    color:white;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-}
-
-.paso{
-    background:#e3f2fd;
-    margin:10px 0;
-    padding:12px;
-    border-radius:10px;
-    font-size:17px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="caja">
-    <h1>🧮 Resolver inecuaciones paso a paso</h1>
-    <p>Ejemplo: <strong>7x+14 &gt; 4x+8</strong></p>
-
-    <input id="ecuacion" placeholder="Escribe la inecuación">
-    <br><br>
-    <button onclick="resolver()">Resolver</button>
-
-    <div id="resultado"></div>
-</div>
-
 <script>
 function resolver(){
     let eq = document.getElementById("ecuacion").value.replace(/\s+/g,"");
     let r = document.getElementById("resultado");
 
-    // ax+b>cx+d
-    let regex = /^(-?\d*)x([+-]\d+)([<>]=?)(-?\d*)x([+-]\d+)$/;
-    let m = eq.match(regex);
+    // Caso 1: ax + b > c
+    let regexSimple = /^(-?\d*)x([+-]\d+)([<>]=?)(-?\d+)$/;
 
-    if(!m){
-        r.innerHTML = "❌ Usa el formato: 7x+14>4x+8";
-        return;
-    }
+    // Caso 2: ax + b > cx + d
+    let regexDoble = /^(-?\d*)x([+-]\d+)([<>]=?)(-?\d*)x([+-]\d+)$/;
 
-    let a = m[1]==="" ? 1 : (m[1]==="-" ? -1 : parseInt(m[1]));
-    let b = parseInt(m[2]);
-    let signo = m[3];
-    let c = m[4]==="" ? 1 : (m[4]==="-" ? -1 : parseInt(m[4]));
-    let d = parseInt(m[5]);
+    let m;
 
-    // Paso 1: ecuación original
-    let paso1 = `${a}x ${b>=0?"+":""}${b} ${signo} ${c}x ${d>=0?"+":""}${d}`;
+    /* =======================
+       CASO SIMPLE
+       ======================= */
+    if (m = eq.match(regexSimple)) {
 
-    // Paso 2: restar b
-    let d1 = d - b;
-    let paso2 = `${a}x ${signo} ${c}x ${d1>=0?"+":""}${d1}`;
+        let a = m[1]==="" ? 1 : (m[1]==="-" ? -1 : parseInt(m[1]));
+        let b = parseInt(m[2]);
+        let signo = m[3];
+        let c = parseInt(m[4]);
 
-    // Paso 3: restar cx
-    let coef = a - c;
-    let paso3 = `${coef}x ${signo} ${d1}`;
+        let paso1 = `${a}x ${b>=0?"+":""}${b} ${signo} ${c}`;
+        let paso2 = c - b;
 
-    // Paso 4: dividir
-    let resultado = d1 / coef;
-    let signoFinal = signo;
+        let signoFinal = signo;
+        if (a < 0) {
+            signoFinal = signo === ">" ? "<" :
+                         signo === "<" ? ">" :
+                         signo === ">=" ? "<=" : ">=";
+        }
 
-    if(coef < 0){
-        signoFinal = signo === ">" ? "<" :
-                     signo === "<" ? ">" :
-                     signo === ">=" ? "<=" : ">=";
-    }
+        let resultado = paso2 / a;
 
-    r.innerHTML = `
+        r.innerHTML = `
         <div class="paso">🔹 Paso 1 (inecuación inicial):<br>${paso1}</div>
 
         <div class="paso">🔹 Paso 2 (restamos ${b} en ambos lados):<br>
-        ${a}x ${b>=0?"-":"+ "}${Math.abs(b)} ${signo} ${c}x ${d>=0?"-":"+ "}${Math.abs(b)}</div>
+        ${a}x ${signo} ${paso2}</div>
 
-        <div class="paso">🔹 Resultado:<br>${paso2}</div>
+        <div class="paso">🔹 Paso 3 (dividimos para ${a}):<br>
+        ${a}x / ${a} ${signo} ${paso2} / ${a}</div>
 
-        <div class="paso">🔹 Paso 3 (restamos ${c}x en ambos lados):<br>
-        ${a}x - ${c}x ${signo} ${c}x - ${c}x ${d1>=0?"+":""}${d1}</div>
+        <div class="paso">⚠️ ${a<0 ? "El signo cambia porque dividimos para negativo" : "El signo se mantiene"}</div>
 
-        <div class="paso">🔹 Resultado:<br>${paso3}</div>
+        <h2>✅ Resultado final:<br>x ${signoFinal} ${resultado}</h2>
+        `;
+        return;
+    }
 
-        <div class="paso">🔹 Paso 4 (dividimos para ${coef}):<br>
-        ${coef}x / ${coef} ${signo} ${d1} / ${coef}</div>
+    /* =======================
+       CASO DOBLE
+       ======================= */
+    if (m = eq.match(regexDoble)) {
+
+        let a = m[1]==="" ? 1 : (m[1]==="-" ? -1 : parseInt(m[1]));
+        let b = parseInt(m[2]);
+        let signo = m[3];
+        let c = m[4]==="" ? 1 : (m[4]==="-" ? -1 : parseInt(m[4]));
+        let d = parseInt(m[5]);
+
+        let d1 = d - b;
+        let coef = a - c;
+        let signoFinal = signo;
+
+        if (coef < 0) {
+            signoFinal = signo === ">" ? "<" :
+                         signo === "<" ? ">" :
+                         signo === ">=" ? "<=" : ">=";
+        }
+
+        let resultado = d1 / coef;
+
+        r.innerHTML = `
+        <div class="paso">🔹 Paso 1:<br>${a}x ${b>=0?"+":""}${b} ${signo} ${c}x ${d>=0?"+":""}${d}</div>
+
+        <div class="paso">🔹 Paso 2 (restamos ${b}):<br>
+        ${a}x ${signo} ${c}x ${d1>=0?"+":""}${d1}</div>
+
+        <div class="paso">🔹 Paso 3 (restamos ${c}x):<br>
+        ${coef}x ${signo} ${d1}</div>
+
+        <div class="paso">🔹 Paso 4 (dividimos para ${coef})</div>
 
         <div class="paso">⚠️ ${coef<0 ? "El signo cambia porque dividimos para negativo" : "El signo se mantiene"}</div>
 
         <h2>✅ Resultado final:<br>x ${signoFinal} ${resultado}</h2>
-    `;
+        `;
+        return;
+    }
+
+    r.innerHTML = "❌ Formato no reconocido. Ejemplo: x+5>4 o 7x+14>4x+8";
 }
 </script>
-
-</body>
-</html>
