@@ -1,95 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Inecuaciones paso a paso</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f2f7ff;
+    text-align:center;
+}
+
+.caja{
+    width:90%;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px #ccc;
+}
+
+input{
+    width:80%;
+    padding:10px;
+    font-size:18px;
+    text-align:center;
+}
+
+button{
+    padding:10px 25px;
+    font-size:18px;
+    background:#1976d2;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.paso{
+    background:#e3f2fd;
+    margin:10px 0;
+    padding:12px;
+    border-radius:10px;
+    font-size:17px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="caja">
+<h1>🧮 Inecuaciones paso a paso</h1>
+<p>Ejemplos válidos:<br>
+<strong>7(x+14)&gt;4x+8</strong> | <strong>4(x+2)&lt;2(x-1)</strong></p>
+
+<input id="ecuacion" placeholder="Escribe la inecuación">
+<br><br>
+<button onclick="resolver()">Resolver</button>
+
+<div id="resultado"></div>
+</div>
+
 <script>
+function cambiar(signo){
+    return {">":"<","<":">",">=":"<=","<=":">="}[signo];
+}
+
+function distribuir(exp){
+    let m = exp.match(/^(-?\d+)\(([-]?\d*)x([+-]\d+)\)$/);
+    if(!m) return null;
+
+    let a = parseInt(m[1]);
+    let b = m[2]===""||m[2]==="-" ? (m[2]==="-"?-1:1) : parseInt(m[2]);
+    let c = parseInt(m[3]);
+
+    return {
+        texto: `${a*b}x ${a*c>=0?"+":""}${a*c}`,
+        x: a*b,
+        n: a*c
+    };
+}
+
 function resolver(){
     let eq = document.getElementById("ecuacion").value.replace(/\s+/g,"");
     let r = document.getElementById("resultado");
+    r.innerHTML = "";
 
-    // Caso 1: ax + b > c
-    let regexSimple = /^(-?\d*)x([+-]\d+)([<>]=?)(-?\d+)$/;
+    let signo = eq.match(/[<>]=?/)[0];
+    let partes = eq.split(signo);
 
-    // Caso 2: ax + b > cx + d
-    let regexDoble = /^(-?\d*)x([+-]\d+)([<>]=?)(-?\d*)x([+-]\d+)$/;
+    let pasos = [];
 
-    let m;
-
-    /* =======================
-       CASO SIMPLE
-       ======================= */
-    if (m = eq.match(regexSimple)) {
-
-        let a = m[1]==="" ? 1 : (m[1]==="-" ? -1 : parseInt(m[1]));
-        let b = parseInt(m[2]);
-        let signo = m[3];
-        let c = parseInt(m[4]);
-
-        let paso1 = `${a}x ${b>=0?"+":""}${b} ${signo} ${c}`;
-        let paso2 = c - b;
-
-        let signoFinal = signo;
-        if (a < 0) {
-            signoFinal = signo === ">" ? "<" :
-                         signo === "<" ? ">" :
-                         signo === ">=" ? "<=" : ">=";
+    function procesar(lado){
+        let d = distribuir(lado);
+        if(d){
+            pasos.push(`Aplicamos distributiva: ${lado} → ${d.texto}`);
+            return d;
         }
-
-        let resultado = paso2 / a;
-
-        r.innerHTML = `
-        <div class="paso">🔹 Paso 1 (inecuación inicial):<br>${paso1}</div>
-
-        <div class="paso">🔹 Paso 2 (restamos ${b} en ambos lados):<br>
-        ${a}x ${signo} ${paso2}</div>
-
-        <div class="paso">🔹 Paso 3 (dividimos para ${a}):<br>
-        ${a}x / ${a} ${signo} ${paso2} / ${a}</div>
-
-        <div class="paso">⚠️ ${a<0 ? "El signo cambia porque dividimos para negativo" : "El signo se mantiene"}</div>
-
-        <h2>✅ Resultado final:<br>x ${signoFinal} ${resultado}</h2>
-        `;
-        return;
+        let m = lado.match(/^(-?\d*)x([+-]\d+)?$/);
+        return {
+            texto: lado,
+            x: m ? (m[1]===""?1:(m[1]==="-"?-1:parseInt(m[1]))) : 0,
+            n: m && m[2]?parseInt(m[2]):parseInt(lado)||0
+        };
     }
 
-    /* =======================
-       CASO DOBLE
-       ======================= */
-    if (m = eq.match(regexDoble)) {
+    let L = procesar(partes[0]);
+    let R = procesar(partes[1]);
 
-        let a = m[1]==="" ? 1 : (m[1]==="-" ? -1 : parseInt(m[1]));
-        let b = parseInt(m[2]);
-        let signo = m[3];
-        let c = m[4]==="" ? 1 : (m[4]==="-" ? -1 : parseInt(m[4]));
-        let d = parseInt(m[5]);
+    pasos.push(`Quitamos paréntesis:<br>${L.texto} ${signo} ${R.texto}`);
 
-        let d1 = d - b;
-        let coef = a - c;
-        let signoFinal = signo;
+    let coef = L.x - R.x;
+    let num = R.n - L.n;
 
-        if (coef < 0) {
-            signoFinal = signo === ">" ? "<" :
-                         signo === "<" ? ">" :
-                         signo === ">=" ? "<=" : ">=";
-        }
+    pasos.push(`Pasamos las x a un lado y números al otro:<br>${coef}x ${signo} ${num}`);
 
-        let resultado = d1 / coef;
+    let signoFinal = coef<0 ? cambiar(signo) : signo;
+    let resultado = num / coef;
 
-        r.innerHTML = `
-        <div class="paso">🔹 Paso 1:<br>${a}x ${b>=0?"+":""}${b} ${signo} ${c}x ${d>=0?"+":""}${d}</div>
+    pasos.push(`Dividimos para ${coef} ${coef<0?"(cambia el signo)":""}`);
 
-        <div class="paso">🔹 Paso 2 (restamos ${b}):<br>
-        ${a}x ${signo} ${c}x ${d1>=0?"+":""}${d1}</div>
+    pasos.forEach(p=>{
+        r.innerHTML += `<div class="paso">${p}</div>`;
+    });
 
-        <div class="paso">🔹 Paso 3 (restamos ${c}x):<br>
-        ${coef}x ${signo} ${d1}</div>
-
-        <div class="paso">🔹 Paso 4 (dividimos para ${coef})</div>
-
-        <div class="paso">⚠️ ${coef<0 ? "El signo cambia porque dividimos para negativo" : "El signo se mantiene"}</div>
-
-        <h2>✅ Resultado final:<br>x ${signoFinal} ${resultado}</h2>
-        `;
-        return;
-    }
-
-    r.innerHTML = "❌ Formato no reconocido. Ejemplo: x+5>4 o 7x+14>4x+8";
+    r.innerHTML += `<h2>✅ Resultado final:<br>x ${signoFinal} ${resultado}</h2>`;
 }
 </script>
+
+</body>
+</html>
