@@ -15,9 +15,9 @@ padding:20px;
 
 .container{
 background:white;
-width:850px;
+width:900px;
 margin:auto;
-padding:20px;
+padding:25px;
 border-radius:15px;
 box-shadow:0 5px 20px rgba(0,0,0,0.2);
 }
@@ -34,6 +34,7 @@ background:#27ae60;
 color:white;
 border:none;
 cursor:pointer;
+font-size:18px;
 }
 
 canvas{
@@ -42,12 +43,27 @@ margin-top:15px;
 border-radius:10px;
 }
 
-.proceso{
-margin-top:15px;
+.resultados{
+display:flex;
+justify-content:space-around;
+margin-top:20px;
+}
+
+.tarjeta{
 background:#f4f6f7;
 padding:15px;
 border-radius:10px;
+width:40%;
 font-size:18px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.proceso{
+margin-top:20px;
+background:#ecf0f1;
+padding:15px;
+border-radius:10px;
+font-size:17px;
 }
 
 </style>
@@ -84,11 +100,25 @@ Unidad
 
 <div id="campos"></div>
 
-<canvas id="canvas" width="500" height="300"></canvas>
+<canvas id="canvas" width="550" height="320"></canvas>
 
 <br>
 
 <button onclick="calcular()">Calcular</button>
+
+<div class="resultados">
+
+<div class="tarjeta">
+<b>Área</b>
+<div id="areaResultado">-</div>
+</div>
+
+<div class="tarjeta">
+<b>Perímetro / Longitud</b>
+<div id="periResultado">-</div>
+</div>
+
+</div>
 
 <div id="proceso" class="proceso"></div>
 
@@ -144,6 +174,9 @@ limpiar();
 
 let f=document.getElementById("figura").value;
 let unidad=document.getElementById("unidad").value;
+
+let area=0;
+let peri=0;
 let texto="";
 
 ctx.font="16px Arial";
@@ -152,14 +185,13 @@ if(f=="cuadrado"){
 
 let l=parseFloat(document.getElementById("lado").value);
 
-ctx.strokeRect(200,80,120,120);
+ctx.strokeRect(220,90,120,120);
+ctx.fillText("Lado "+l+" "+unidad,240,80);
 
-ctx.fillText("Lado "+l+" "+unidad,210,70);
+area=l*l;
+peri=4*l;
 
-let area=l*l;
-
-texto="Área = lado × lado<br>";
-texto+=l+" × "+l+" = "+area+" "+unidad+"²";
+texto="Área = lado × lado<br>"+l+" × "+l;
 
 }
 
@@ -168,15 +200,15 @@ if(f=="rectangulo"){
 let b=parseFloat(document.getElementById("base").value);
 let h=parseFloat(document.getElementById("altura").value);
 
-ctx.strokeRect(170,90,200,120);
+ctx.strokeRect(180,100,200,120);
 
-ctx.fillText("Base "+b+" "+unidad,240,80);
-ctx.fillText("Altura "+h+" "+unidad,380,150);
+ctx.fillText("Base "+b+" "+unidad,250,90);
+ctx.fillText("Altura "+h+" "+unidad,400,160);
 
-let area=b*h;
+area=b*h;
+peri=2*(b+h);
 
-texto="Área = base × altura<br>";
-texto+=b+" × "+h+" = "+area+" "+unidad+"²";
+texto="Área = base × altura<br>"+b+" × "+h;
 
 }
 
@@ -185,20 +217,20 @@ if(f=="circulo"){
 let r=parseFloat(document.getElementById("radio").value);
 
 ctx.beginPath();
-ctx.arc(250,150,80,0,Math.PI*2);
+ctx.arc(270,160,80,0,Math.PI*2);
 ctx.stroke();
 
 ctx.beginPath();
-ctx.moveTo(250,150);
-ctx.lineTo(330,150);
+ctx.moveTo(270,160);
+ctx.lineTo(350,160);
 ctx.stroke();
 
-ctx.fillText("Radio "+r+" "+unidad,260,140);
+ctx.fillText("Radio "+r+" "+unidad,290,150);
 
-let area=Math.PI*r*r;
+area=Math.PI*r*r;
+peri=2*Math.PI*r;
 
-texto="Área = π × radio²<br>";
-texto+="3.14 × "+r+"² = "+area.toFixed(2)+" "+unidad+"²";
+texto="Área = π × r²";
 
 }
 
@@ -208,19 +240,26 @@ let b=parseFloat(document.getElementById("base").value);
 let h=parseFloat(document.getElementById("altura").value);
 
 ctx.beginPath();
-ctx.moveTo(250,70);
-ctx.lineTo(150,220);
-ctx.lineTo(350,220);
+ctx.moveTo(270,70);
+ctx.lineTo(150,230);
+ctx.lineTo(390,230);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("Base "+b+" "+unidad,230,240);
-ctx.fillText("Altura "+h+" "+unidad,360,150);
+let centroBase=270;
 
-let area=(b*h)/2;
+ctx.beginPath();
+ctx.moveTo(centroBase,230);
+ctx.lineTo(centroBase,70);
+ctx.stroke();
 
-texto="Área = base × altura / 2<br>";
-texto+="("+b+" × "+h+") / 2 = "+area+" "+unidad+"²";
+ctx.fillText("Base "+b+" "+unidad,250,250);
+ctx.fillText("Altura "+h+" "+unidad,centroBase+10,150);
+
+area=(b*h)/2;
+peri=b+Math.sqrt((b/2)*(b/2)+h*h)*2;
+
+texto="Área = (base × altura) / 2";
 
 }
 
@@ -230,30 +269,31 @@ let D=parseFloat(document.getElementById("D").value);
 let d=parseFloat(document.getElementById("d").value);
 
 ctx.beginPath();
-ctx.moveTo(250,60);
-ctx.lineTo(370,150);
-ctx.lineTo(250,240);
-ctx.lineTo(130,150);
+ctx.moveTo(270,60);
+ctx.lineTo(390,160);
+ctx.lineTo(270,260);
+ctx.lineTo(150,160);
 ctx.closePath();
 ctx.stroke();
 
 ctx.beginPath();
-ctx.moveTo(250,60);
-ctx.lineTo(250,240);
+ctx.moveTo(270,60);
+ctx.lineTo(270,260);
 ctx.stroke();
 
 ctx.beginPath();
-ctx.moveTo(130,150);
-ctx.lineTo(370,150);
+ctx.moveTo(150,160);
+ctx.lineTo(390,160);
 ctx.stroke();
 
-ctx.fillText("D "+D+" "+unidad,260,150);
-ctx.fillText("d "+d+" "+unidad,220,140);
+ctx.fillText("D "+D+" "+unidad,280,160);
+ctx.fillText("d "+d+" "+unidad,240,150);
 
-let area=(D*d)/2;
+area=(D*d)/2;
 
-texto="Área = (D × d) / 2<br>";
-texto+="("+D+" × "+d+") / 2 = "+area+" "+unidad+"²";
+peri=4*Math.sqrt((D/2)*(D/2)+(d/2)*(d/2));
+
+texto="Área = (D × d) / 2";
 
 }
 
@@ -264,21 +304,22 @@ let b=parseFloat(document.getElementById("b").value);
 let h=parseFloat(document.getElementById("h").value);
 
 ctx.beginPath();
-ctx.moveTo(150,220);
-ctx.lineTo(350,220);
-ctx.lineTo(300,120);
-ctx.lineTo(200,120);
+ctx.moveTo(170,230);
+ctx.lineTo(370,230);
+ctx.lineTo(330,120);
+ctx.lineTo(210,120);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("B "+B+" "+unidad,230,240);
-ctx.fillText("b "+b+" "+unidad,240,110);
-ctx.fillText("h "+h+" "+unidad,120,160);
+ctx.fillText("B "+B+" "+unidad,250,250);
+ctx.fillText("b "+b+" "+unidad,260,110);
+ctx.fillText("h "+h+" "+unidad,140,170);
 
-let area=((B+b)*h)/2;
+area=((B+b)*h)/2;
 
-texto="Área = (B + b) × h / 2<br>";
-texto+="("+B+" + "+b+") × "+h+" / 2 = "+area+" "+unidad+"²";
+peri=B+b+2*Math.sqrt(h*h+((B-b)/2)*((B-b)/2));
+
+texto="Área = (B + b) × h / 2";
 
 }
 
@@ -287,24 +328,22 @@ if(f=="pentagono"){
 let l=parseFloat(document.getElementById("lado").value);
 let a=parseFloat(document.getElementById("apotema").value);
 
-let per=5*l;
-let area=(per*a)/2;
+peri=5*l;
+area=(peri*a)/2;
 
 ctx.beginPath();
-ctx.moveTo(250,60);
-ctx.lineTo(350,120);
-ctx.lineTo(310,240);
-ctx.lineTo(190,240);
-ctx.lineTo(150,120);
+ctx.moveTo(270,60);
+ctx.lineTo(370,130);
+ctx.lineTo(330,250);
+ctx.lineTo(210,250);
+ctx.lineTo(170,130);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("lado "+l+" "+unidad,350,140);
-ctx.fillText("apotema "+a+" "+unidad,240,160);
+ctx.fillText("lado "+l+" "+unidad,380,150);
+ctx.fillText("apotema "+a+" "+unidad,260,170);
 
-texto="Perímetro = 5 × lado = "+per+"<br>";
-texto+="Área = (Perímetro × apotema) / 2<br>";
-texto+="("+per+" × "+a+") / 2 = "+area+" "+unidad+"²";
+texto="Área = (Perímetro × apotema) / 2";
 
 }
 
@@ -313,28 +352,28 @@ if(f=="hexagono"){
 let l=parseFloat(document.getElementById("lado").value);
 let a=parseFloat(document.getElementById("apotema").value);
 
-let per=6*l;
-let area=(per*a)/2;
+peri=6*l;
+area=(peri*a)/2;
 
 ctx.beginPath();
-ctx.moveTo(250,60);
-ctx.lineTo(350,120);
-ctx.lineTo(350,220);
-ctx.lineTo(250,260);
-ctx.lineTo(150,220);
-ctx.lineTo(150,120);
+ctx.moveTo(270,60);
+ctx.lineTo(380,130);
+ctx.lineTo(380,230);
+ctx.lineTo(270,290);
+ctx.lineTo(160,230);
+ctx.lineTo(160,130);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("lado "+l+" "+unidad,360,160);
-ctx.fillText("apotema "+a+" "+unidad,240,160);
+ctx.fillText("lado "+l+" "+unidad,390,170);
+ctx.fillText("apotema "+a+" "+unidad,260,170);
 
-texto="Perímetro = 6 × lado = "+per+"<br>";
-texto+="Área = (Perímetro × apotema) / 2<br>";
-texto+="("+per+" × "+a+") / 2 = "+area+" "+unidad+"²";
+texto="Área = (Perímetro × apotema) / 2";
 
 }
 
+document.getElementById("areaResultado").innerHTML=area.toFixed(2)+" "+unidad+"²";
+document.getElementById("periResultado").innerHTML=peri.toFixed(2)+" "+unidad;
 document.getElementById("proceso").innerHTML=texto;
 
 }
