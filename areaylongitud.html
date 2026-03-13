@@ -5,6 +5,13 @@
 <title>Geometría Interactiva</title>
 
 <style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Geometría para Niños</title>
+
+<style>
 
 body{
 font-family:Arial;
@@ -15,7 +22,7 @@ padding:20px;
 
 .container{
 background:white;
-width:800px;
+width:850px;
 margin:auto;
 padding:25px;
 border-radius:15px;
@@ -92,15 +99,6 @@ function limpiar(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-function flecha(x1,y1,x2,y2){
-
-ctx.beginPath();
-ctx.moveTo(x1,y1);
-ctx.lineTo(x2,y2);
-ctx.stroke();
-
-}
-
 function cambiarFigura(){
 
 let f=document.getElementById("figura").value;
@@ -142,84 +140,119 @@ limpiar();
 
 let texto="";
 
+if(f=="cuadrado"){
+
+let l=parseFloat(document.getElementById("lado").value);
+
+ctx.strokeRect(200,100,120,120);
+
+ctx.fillText("lado "+l+" "+unidad,210,240);
+
+let area=l*l;
+
+texto="Área = lado × lado<br>";
+texto+=l+" × "+l+" = "+area+" "+unidad+"²";
+
+}
+
+if(f=="rectangulo"){
+
+let b=parseFloat(document.getElementById("base").value);
+let h=parseFloat(document.getElementById("altura").value);
+
+ctx.strokeRect(170,110,180,100);
+
+ctx.fillText("Base "+b+" "+unidad,230,230);
+ctx.fillText("Altura "+h+" "+unidad,360,160);
+
+let area=b*h;
+
+texto="Área = base × altura<br>";
+texto+=b+" × "+h+" = "+area+" "+unidad+"²";
+
+}
+
 if(f=="triangulo"){
 
 let b=parseFloat(document.getElementById("base").value);
 let h=parseFloat(document.getElementById("altura").value);
 
 ctx.beginPath();
-ctx.moveTo(150,220);
-ctx.lineTo(350,220);
-ctx.lineTo(250,80);
+ctx.moveTo(200,220);
+ctx.lineTo(360,220);
+ctx.lineTo(280,100);
 ctx.closePath();
 ctx.stroke();
 
-flecha(150,240,350,240);
-ctx.fillText("Base "+b+" "+unidad,210,260);
-
-flecha(250,220,250,80);
-ctx.fillText("Altura "+h+" "+unidad,260,150);
+ctx.fillText("Base "+b+" "+unidad,260,240);
+ctx.fillText("Altura "+h+" "+unidad,370,160);
 
 let area=b*h/2;
 
-texto+="Paso 1: Área = (base × altura) / 2<br>";
-texto+="Paso 2: Área = ("+b+" × "+h+") /2<br>";
-texto+="Paso 3: Área = "+area+" "+unidad+"²";
+texto="Área = (base × altura) /2<br>";
+texto="("+b+" × "+h+") /2 = "+area+" "+unidad+"²";
 
 }
 
-if(f=="rombo"){
+if(f=="circulo"){
 
-let D=parseFloat(document.getElementById("D").value);
-let d=parseFloat(document.getElementById("d").value);
+let r=parseFloat(document.getElementById("r").value);
 
 ctx.beginPath();
-ctx.moveTo(250,60);
-ctx.lineTo(360,150);
-ctx.lineTo(250,240);
-ctx.lineTo(140,150);
-ctx.closePath();
+ctx.arc(280,150,70,0,Math.PI*2);
 ctx.stroke();
 
-flecha(250,60,250,240);
-ctx.fillText("D "+D+" "+unidad,260,150);
+ctx.fillText("Radio "+r+" "+unidad,260,60);
 
-flecha(140,150,360,150);
-ctx.fillText("d "+d+" "+unidad,220,140);
+let area=Math.PI*r*r;
 
-let area=D*d/2;
-
-texto+="Paso 1: Área = (D × d)/2<br>";
-texto+="Paso 2: ("+D+" × "+d+")/2<br>";
-texto+="Paso 3: "+area+" "+unidad+"²";
+texto="Área = π × radio²<br>";
+texto="3.14 × "+r+"² = "+area.toFixed(2)+" "+unidad+"²";
 
 }
 
-if(f=="trapecio"){
+if(f=="pentagono"){
 
-let B=parseFloat(document.getElementById("B").value);
-let b=parseFloat(document.getElementById("b").value);
-let h=parseFloat(document.getElementById("h").value);
+let l=parseFloat(document.getElementById("lado").value);
+let a=parseFloat(document.getElementById("apo").value);
+
+let area=(5*l*a)/2;
 
 ctx.beginPath();
-ctx.moveTo(150,220);
-ctx.lineTo(350,220);
-ctx.lineTo(300,120);
-ctx.lineTo(200,120);
+ctx.moveTo(280,80);
+ctx.lineTo(350,140);
+ctx.lineTo(320,220);
+ctx.lineTo(240,220);
+ctx.lineTo(210,140);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("B "+B+" "+unidad,230,240);
-ctx.fillText("b "+b+" "+unidad,240,110);
+texto="Área = (Perímetro × apotema)/2<br>";
+texto="Perímetro = 5 × "+l+" = "+(5*l)+"<br>";
+texto="Área = ("+(5*l)+" × "+a+")/2 = "+area+" "+unidad+"²";
 
-flecha(180,220,180,120);
-ctx.fillText("h "+h+" "+unidad,140,170);
+}
 
-let area=(B+b)*h/2;
+if(f=="hexagono"){
 
-texto+="Paso 1: Área = (B + b) × h /2<br>";
-texto+="Paso 2: ("+B+" + "+b+") × "+h+" /2<br>";
-texto+="Paso 3: "+area+" "+unidad+"²";
+let l=parseFloat(document.getElementById("lado").value);
+let a=parseFloat(document.getElementById("apo").value);
+
+let area=(6*l*a)/2;
+
+ctx.beginPath();
+ctx.moveTo(280,80);
+ctx.lineTo(360,130);
+ctx.lineTo(360,200);
+ctx.lineTo(280,250);
+ctx.lineTo(200,200);
+ctx.lineTo(200,130);
+ctx.closePath();
+ctx.stroke();
+
+texto="Área = (Perímetro × apotema)/2<br>";
+texto="Perímetro = 6 × "+l+" = "+(6*l)+"<br>";
+texto="Área = ("+(6*l)+" × "+a+")/2 = "+area+" "+unidad+"²";
 
 }
 
