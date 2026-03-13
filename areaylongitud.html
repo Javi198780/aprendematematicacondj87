@@ -2,20 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Geometría Interactiva</title>
-
-<style>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Geometría para Niños</title>
+<title>Geometría Divertida</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:linear-gradient(135deg,#84fab0,#8fd3f4);
+background:linear-gradient(120deg,#a1c4fd,#c2e9fb);
 text-align:center;
 padding:20px;
 }
@@ -24,58 +17,69 @@ padding:20px;
 background:white;
 width:850px;
 margin:auto;
-padding:25px;
+padding:20px;
 border-radius:15px;
-box-shadow:0px 5px 20px rgba(0,0,0,0.2);
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
 }
 
 select,input,button{
 padding:8px;
 margin:6px;
 font-size:16px;
+border-radius:6px;
+}
+
+button{
+background:#27ae60;
+color:white;
+border:none;
+cursor:pointer;
 }
 
 canvas{
 border:2px solid #ccc;
-margin-top:10px;
+margin-top:15px;
 border-radius:10px;
 }
 
 .proceso{
+margin-top:15px;
 background:#f4f6f7;
 padding:15px;
-margin-top:15px;
 border-radius:10px;
 font-size:18px;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>📐 Geometría Interactiva</h1>
+<h1>📐 Geometría para Niños</h1>
 
-<select id="figura" onchange="cambiarFigura()">
+Figura
 
-<option value="">Seleccionar figura</option>
+<select id="figura" onchange="camposFigura()">
+
+<option value="">Seleccionar</option>
 <option value="cuadrado">Cuadrado</option>
 <option value="rectangulo">Rectángulo</option>
+<option value="circulo">Círculo</option>
 <option value="triangulo">Triángulo</option>
 <option value="rombo">Rombo</option>
 <option value="trapecio">Trapecio</option>
 <option value="pentagono">Pentágono</option>
 <option value="hexagono">Hexágono</option>
-<option value="circulo">Círculo</option>
 
 </select>
 
+Unidad
+
 <select id="unidad">
-<option value="cm">cm</option>
-<option value="m">m</option>
+<option value="cm">Centímetros</option>
+<option value="m">Metros</option>
 </select>
 
 <div id="campos"></div>
@@ -99,54 +103,58 @@ function limpiar(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-function cambiarFigura(){
+function camposFigura(){
 
 let f=document.getElementById("figura").value;
-
-limpiar();
+let html="";
 
 if(f=="cuadrado")
-document.getElementById("campos").innerHTML="Lado <input id='lado'>";
+html="Lado <input id='lado' type='number'>";
 
 if(f=="rectangulo")
-document.getElementById("campos").innerHTML="Base <input id='base'> Altura <input id='altura'>";
-
-if(f=="triangulo")
-document.getElementById("campos").innerHTML="Base <input id='base'> Altura <input id='altura'>";
-
-if(f=="rombo")
-document.getElementById("campos").innerHTML="Diagonal mayor <input id='D'> Diagonal menor <input id='d'>";
-
-if(f=="trapecio")
-document.getElementById("campos").innerHTML="Base mayor <input id='B'> Base menor <input id='b'> Altura <input id='h'>";
-
-if(f=="pentagono")
-document.getElementById("campos").innerHTML="Lado <input id='lado'> Apotema <input id='apo'>";
-
-if(f=="hexagono")
-document.getElementById("campos").innerHTML="Lado <input id='lado'> Apotema <input id='apo'>";
+html="Base <input id='base' type='number'> Altura <input id='altura' type='number'>";
 
 if(f=="circulo")
-document.getElementById("campos").innerHTML="Radio <input id='r'>";
+html="Radio <input id='radio' type='number'>";
+
+if(f=="triangulo")
+html="Base <input id='base' type='number'> Altura <input id='altura' type='number'>";
+
+if(f=="rombo")
+html="Diagonal mayor <input id='D' type='number'> Diagonal menor <input id='d' type='number'>";
+
+if(f=="trapecio")
+html="Base mayor <input id='B' type='number'> Base menor <input id='b' type='number'> Altura <input id='h' type='number'>";
+
+if(f=="pentagono")
+html="Lado <input id='lado' type='number'> Apotema <input id='apotema' type='number'>";
+
+if(f=="hexagono")
+html="Lado <input id='lado' type='number'> Apotema <input id='apotema' type='number'>";
+
+document.getElementById("campos").innerHTML=html;
+
+limpiar();
 
 }
 
 function calcular(){
 
-let f=document.getElementById("figura").value;
-let unidad=document.getElementById("unidad").value;
-
 limpiar();
 
+let f=document.getElementById("figura").value;
+let unidad=document.getElementById("unidad").value;
 let texto="";
+
+ctx.font="16px Arial";
 
 if(f=="cuadrado"){
 
 let l=parseFloat(document.getElementById("lado").value);
 
-ctx.strokeRect(200,100,120,120);
+ctx.strokeRect(200,80,120,120);
 
-ctx.fillText("lado "+l+" "+unidad,210,240);
+ctx.fillText("Lado "+l+" "+unidad,210,70);
 
 let area=l*l;
 
@@ -160,15 +168,37 @@ if(f=="rectangulo"){
 let b=parseFloat(document.getElementById("base").value);
 let h=parseFloat(document.getElementById("altura").value);
 
-ctx.strokeRect(170,110,180,100);
+ctx.strokeRect(170,90,200,120);
 
-ctx.fillText("Base "+b+" "+unidad,230,230);
-ctx.fillText("Altura "+h+" "+unidad,360,160);
+ctx.fillText("Base "+b+" "+unidad,240,80);
+ctx.fillText("Altura "+h+" "+unidad,380,150);
 
 let area=b*h;
 
 texto="Área = base × altura<br>";
 texto+=b+" × "+h+" = "+area+" "+unidad+"²";
+
+}
+
+if(f=="circulo"){
+
+let r=parseFloat(document.getElementById("radio").value);
+
+ctx.beginPath();
+ctx.arc(250,150,80,0,Math.PI*2);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(250,150);
+ctx.lineTo(330,150);
+ctx.stroke();
+
+ctx.fillText("Radio "+r+" "+unidad,260,140);
+
+let area=Math.PI*r*r;
+
+texto="Área = π × radio²<br>";
+texto+="3.14 × "+r+"² = "+area.toFixed(2)+" "+unidad+"²";
 
 }
 
@@ -178,81 +208,130 @@ let b=parseFloat(document.getElementById("base").value);
 let h=parseFloat(document.getElementById("altura").value);
 
 ctx.beginPath();
-ctx.moveTo(200,220);
-ctx.lineTo(360,220);
-ctx.lineTo(280,100);
+ctx.moveTo(250,70);
+ctx.lineTo(150,220);
+ctx.lineTo(350,220);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("Base "+b+" "+unidad,260,240);
-ctx.fillText("Altura "+h+" "+unidad,370,160);
+ctx.fillText("Base "+b+" "+unidad,230,240);
+ctx.fillText("Altura "+h+" "+unidad,360,150);
 
-let area=b*h/2;
+let area=(b*h)/2;
 
-texto="Área = (base × altura) /2<br>";
-texto="("+b+" × "+h+") /2 = "+area+" "+unidad+"²";
+texto="Área = base × altura / 2<br>";
+texto+="("+b+" × "+h+") / 2 = "+area+" "+unidad+"²";
 
 }
 
-if(f=="circulo"){
+if(f=="rombo"){
 
-let r=parseFloat(document.getElementById("r").value);
+let D=parseFloat(document.getElementById("D").value);
+let d=parseFloat(document.getElementById("d").value);
 
 ctx.beginPath();
-ctx.arc(280,150,70,0,Math.PI*2);
+ctx.moveTo(250,60);
+ctx.lineTo(370,150);
+ctx.lineTo(250,240);
+ctx.lineTo(130,150);
+ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("Radio "+r+" "+unidad,260,60);
+ctx.beginPath();
+ctx.moveTo(250,60);
+ctx.lineTo(250,240);
+ctx.stroke();
 
-let area=Math.PI*r*r;
+ctx.beginPath();
+ctx.moveTo(130,150);
+ctx.lineTo(370,150);
+ctx.stroke();
 
-texto="Área = π × radio²<br>";
-texto="3.14 × "+r+"² = "+area.toFixed(2)+" "+unidad+"²";
+ctx.fillText("D "+D+" "+unidad,260,150);
+ctx.fillText("d "+d+" "+unidad,220,140);
+
+let area=(D*d)/2;
+
+texto="Área = (D × d) / 2<br>";
+texto+="("+D+" × "+d+") / 2 = "+area+" "+unidad+"²";
+
+}
+
+if(f=="trapecio"){
+
+let B=parseFloat(document.getElementById("B").value);
+let b=parseFloat(document.getElementById("b").value);
+let h=parseFloat(document.getElementById("h").value);
+
+ctx.beginPath();
+ctx.moveTo(150,220);
+ctx.lineTo(350,220);
+ctx.lineTo(300,120);
+ctx.lineTo(200,120);
+ctx.closePath();
+ctx.stroke();
+
+ctx.fillText("B "+B+" "+unidad,230,240);
+ctx.fillText("b "+b+" "+unidad,240,110);
+ctx.fillText("h "+h+" "+unidad,120,160);
+
+let area=((B+b)*h)/2;
+
+texto="Área = (B + b) × h / 2<br>";
+texto+="("+B+" + "+b+") × "+h+" / 2 = "+area+" "+unidad+"²";
 
 }
 
 if(f=="pentagono"){
 
 let l=parseFloat(document.getElementById("lado").value);
-let a=parseFloat(document.getElementById("apo").value);
+let a=parseFloat(document.getElementById("apotema").value);
 
-let area=(5*l*a)/2;
+let per=5*l;
+let area=(per*a)/2;
 
 ctx.beginPath();
-ctx.moveTo(280,80);
-ctx.lineTo(350,140);
-ctx.lineTo(320,220);
-ctx.lineTo(240,220);
-ctx.lineTo(210,140);
+ctx.moveTo(250,60);
+ctx.lineTo(350,120);
+ctx.lineTo(310,240);
+ctx.lineTo(190,240);
+ctx.lineTo(150,120);
 ctx.closePath();
 ctx.stroke();
 
-texto="Área = (Perímetro × apotema)/2<br>";
-texto="Perímetro = 5 × "+l+" = "+(5*l)+"<br>";
-texto="Área = ("+(5*l)+" × "+a+")/2 = "+area+" "+unidad+"²";
+ctx.fillText("lado "+l+" "+unidad,350,140);
+ctx.fillText("apotema "+a+" "+unidad,240,160);
+
+texto="Perímetro = 5 × lado = "+per+"<br>";
+texto+="Área = (Perímetro × apotema) / 2<br>";
+texto+="("+per+" × "+a+") / 2 = "+area+" "+unidad+"²";
 
 }
 
 if(f=="hexagono"){
 
 let l=parseFloat(document.getElementById("lado").value);
-let a=parseFloat(document.getElementById("apo").value);
+let a=parseFloat(document.getElementById("apotema").value);
 
-let area=(6*l*a)/2;
+let per=6*l;
+let area=(per*a)/2;
 
 ctx.beginPath();
-ctx.moveTo(280,80);
-ctx.lineTo(360,130);
-ctx.lineTo(360,200);
-ctx.lineTo(280,250);
-ctx.lineTo(200,200);
-ctx.lineTo(200,130);
+ctx.moveTo(250,60);
+ctx.lineTo(350,120);
+ctx.lineTo(350,220);
+ctx.lineTo(250,260);
+ctx.lineTo(150,220);
+ctx.lineTo(150,120);
 ctx.closePath();
 ctx.stroke();
 
-texto="Área = (Perímetro × apotema)/2<br>";
-texto="Perímetro = 6 × "+l+" = "+(6*l)+"<br>";
-texto="Área = ("+(6*l)+" × "+a+")/2 = "+area+" "+unidad+"²";
+ctx.fillText("lado "+l+" "+unidad,360,160);
+ctx.fillText("apotema "+a+" "+unidad,240,160);
+
+texto="Perímetro = 6 × lado = "+per+"<br>";
+texto+="Área = (Perímetro × apotema) / 2<br>";
+texto+="("+per+" × "+a+") / 2 = "+area+" "+unidad+"²";
 
 }
 
