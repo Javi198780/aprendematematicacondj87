@@ -2,20 +2,20 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Geometría Visual para Niños</title>
+<title>Geometría Interactiva</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:linear-gradient(135deg,#d4fc79,#96e6a1);
+background:linear-gradient(135deg,#84fab0,#8fd3f4);
 text-align:center;
 padding:20px;
 }
 
 .container{
 background:white;
-width:700px;
+width:800px;
 margin:auto;
 padding:25px;
 border-radius:15px;
@@ -23,23 +23,15 @@ box-shadow:0px 5px 20px rgba(0,0,0,0.2);
 }
 
 select,input,button{
-padding:10px;
-margin:8px;
+padding:8px;
+margin:6px;
 font-size:16px;
-border-radius:8px;
-}
-
-button{
-background:#27ae60;
-color:white;
-border:none;
-cursor:pointer;
 }
 
 canvas{
 border:2px solid #ccc;
+margin-top:10px;
 border-radius:10px;
-margin-top:15px;
 }
 
 .proceso{
@@ -58,28 +50,36 @@ font-size:18px;
 
 <div class="container">
 
-<h1>📐 Aprendamos Geometría</h1>
-
-<p>Selecciona una figura</p>
+<h1>📐 Geometría Interactiva</h1>
 
 <select id="figura" onchange="cambiarFigura()">
 
-<option value="">Seleccionar</option>
+<option value="">Seleccionar figura</option>
 <option value="cuadrado">Cuadrado</option>
 <option value="rectangulo">Rectángulo</option>
+<option value="triangulo">Triángulo</option>
+<option value="rombo">Rombo</option>
+<option value="trapecio">Trapecio</option>
+<option value="pentagono">Pentágono</option>
+<option value="hexagono">Hexágono</option>
 <option value="circulo">Círculo</option>
 
 </select>
 
+<select id="unidad">
+<option value="cm">cm</option>
+<option value="m">m</option>
+</select>
+
 <div id="campos"></div>
 
-<canvas id="canvas" width="450" height="250"></canvas>
+<canvas id="canvas" width="500" height="300"></canvas>
 
 <br>
 
-<button onclick="calcular()">Calcular Área</button>
+<button onclick="calcular()">Calcular</button>
 
-<div class="proceso" id="proceso"></div>
+<div id="proceso" class="proceso"></div>
 
 </div>
 
@@ -92,102 +92,134 @@ function limpiar(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
+function flecha(x1,y1,x2,y2){
+
+ctx.beginPath();
+ctx.moveTo(x1,y1);
+ctx.lineTo(x2,y2);
+ctx.stroke();
+
+}
+
 function cambiarFigura(){
 
-let figura=document.getElementById("figura").value;
+let f=document.getElementById("figura").value;
 
 limpiar();
 
-if(figura=="cuadrado"){
+if(f=="cuadrado")
+document.getElementById("campos").innerHTML="Lado <input id='lado'>";
 
-document.getElementById("campos").innerHTML=
-"Lado: <input type='number' id='lado'>";
+if(f=="rectangulo")
+document.getElementById("campos").innerHTML="Base <input id='base'> Altura <input id='altura'>";
 
-}
+if(f=="triangulo")
+document.getElementById("campos").innerHTML="Base <input id='base'> Altura <input id='altura'>";
 
-if(figura=="rectangulo"){
+if(f=="rombo")
+document.getElementById("campos").innerHTML="Diagonal mayor <input id='D'> Diagonal menor <input id='d'>";
 
-document.getElementById("campos").innerHTML=
-"Base: <input type='number' id='base'><br>Altura: <input type='number' id='altura'>";
+if(f=="trapecio")
+document.getElementById("campos").innerHTML="Base mayor <input id='B'> Base menor <input id='b'> Altura <input id='h'>";
 
-}
+if(f=="pentagono")
+document.getElementById("campos").innerHTML="Lado <input id='lado'> Apotema <input id='apo'>";
 
-if(figura=="circulo"){
+if(f=="hexagono")
+document.getElementById("campos").innerHTML="Lado <input id='lado'> Apotema <input id='apo'>";
 
-document.getElementById("campos").innerHTML=
-"Radio: <input type='number' id='radio'>";
-
-}
+if(f=="circulo")
+document.getElementById("campos").innerHTML="Radio <input id='r'>";
 
 }
 
 function calcular(){
 
-let figura=document.getElementById("figura").value;
+let f=document.getElementById("figura").value;
+let unidad=document.getElementById("unidad").value;
 
 limpiar();
 
 let texto="";
 
-if(figura=="cuadrado"){
+if(f=="triangulo"){
 
-let lado=parseFloat(document.getElementById("lado").value);
-
-ctx.fillStyle="#3498db";
-ctx.fillRect(170,60,100,100);
-
-ctx.fillStyle="black";
-ctx.fillText("Lado = "+lado,180,50);
-
-let area=lado*lado;
-
-texto+="Paso 1: Área = lado × lado <br>";
-texto+="Paso 2: Área = "+lado+" × "+lado+"<br>";
-texto+="Paso 3: Área = "+area+"<br><br>";
-texto+="⭐ ¡Excelente trabajo!";
-
-}
-
-if(figura=="rectangulo"){
-
-let base=parseFloat(document.getElementById("base").value);
-let altura=parseFloat(document.getElementById("altura").value);
-
-ctx.fillStyle="#9b59b6";
-ctx.fillRect(140,80,180,90);
-
-ctx.fillStyle="black";
-ctx.fillText("Base = "+base,190,70);
-ctx.fillText("Altura = "+altura,330,120);
-
-let area=base*altura;
-
-texto+="Paso 1: Área = base × altura <br>";
-texto+="Paso 2: Área = "+base+" × "+altura+"<br>";
-texto+="Paso 3: Área = "+area+"<br><br>";
-texto+="⭐ ¡Muy bien!";
-
-}
-
-if(figura=="circulo"){
-
-let r=parseFloat(document.getElementById("radio").value);
-
-ctx.fillStyle="#f1c40f";
+let b=parseFloat(document.getElementById("base").value);
+let h=parseFloat(document.getElementById("altura").value);
 
 ctx.beginPath();
-ctx.arc(220,120,60,0,Math.PI*2);
-ctx.fill();
+ctx.moveTo(150,220);
+ctx.lineTo(350,220);
+ctx.lineTo(250,80);
+ctx.closePath();
+ctx.stroke();
 
-ctx.fillStyle="black";
-ctx.fillText("Radio = "+r,210,40);
+flecha(150,240,350,240);
+ctx.fillText("Base "+b+" "+unidad,210,260);
 
-let area=Math.PI*r*r;
+flecha(250,220,250,80);
+ctx.fillText("Altura "+h+" "+unidad,260,150);
 
-texto+="Paso 1: Área = π × radio² <br>";
-texto+="Paso 2: Área = 3.14 × "+r+"²<br>";
-texto+="Paso 3: Área = "+area.toFixed(2)+"<br><br>";
-texto+="⭐ ¡Genial!";
+let area=b*h/2;
+
+texto+="Paso 1: Área = (base × altura) / 2<br>";
+texto+="Paso 2: Área = ("+b+" × "+h+") /2<br>";
+texto+="Paso 3: Área = "+area+" "+unidad+"²";
+
+}
+
+if(f=="rombo"){
+
+let D=parseFloat(document.getElementById("D").value);
+let d=parseFloat(document.getElementById("d").value);
+
+ctx.beginPath();
+ctx.moveTo(250,60);
+ctx.lineTo(360,150);
+ctx.lineTo(250,240);
+ctx.lineTo(140,150);
+ctx.closePath();
+ctx.stroke();
+
+flecha(250,60,250,240);
+ctx.fillText("D "+D+" "+unidad,260,150);
+
+flecha(140,150,360,150);
+ctx.fillText("d "+d+" "+unidad,220,140);
+
+let area=D*d/2;
+
+texto+="Paso 1: Área = (D × d)/2<br>";
+texto+="Paso 2: ("+D+" × "+d+")/2<br>";
+texto+="Paso 3: "+area+" "+unidad+"²";
+
+}
+
+if(f=="trapecio"){
+
+let B=parseFloat(document.getElementById("B").value);
+let b=parseFloat(document.getElementById("b").value);
+let h=parseFloat(document.getElementById("h").value);
+
+ctx.beginPath();
+ctx.moveTo(150,220);
+ctx.lineTo(350,220);
+ctx.lineTo(300,120);
+ctx.lineTo(200,120);
+ctx.closePath();
+ctx.stroke();
+
+ctx.fillText("B "+B+" "+unidad,230,240);
+ctx.fillText("b "+b+" "+unidad,240,110);
+
+flecha(180,220,180,120);
+ctx.fillText("h "+h+" "+unidad,140,170);
+
+let area=(B+b)*h/2;
+
+texto+="Paso 1: Área = (B + b) × h /2<br>";
+texto+="Paso 2: ("+B+" + "+b+") × "+h+" /2<br>";
+texto+="Paso 3: "+area+" "+unidad+"²";
 
 }
 
