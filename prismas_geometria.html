@@ -290,9 +290,11 @@ ctx.fillText("h "+h+" "+u,210,180);
 
 }
 
+let P = 2*(l+a);
+
 document.getElementById("resultado").innerHTML =
 
-"<h3>Procedimiento paso a paso</h3>"+
+"<h2>Procedimiento paso a paso</h2>"+
 
 "<b>1️⃣ Área de la base</b><br>"+
 "A = largo × ancho<br>"+
@@ -302,11 +304,11 @@ document.getElementById("resultado").innerHTML =
 "<b>2️⃣ Perímetro de la base</b><br>"+
 "P = 2(largo + ancho)<br>"+
 "P = 2("+l+" + "+a+")<br>"+
-"P = "+(2*(l+a)).toFixed(2)+" "+u+"<br><br>"+
+"P = "+P.toFixed(2)+" "+u+"<br><br>"+
 
 "<b>3️⃣ Área lateral</b><br>"+
 "AL = Perímetro × altura<br>"+
-"AL = "+(2*(l+a)).toFixed(2)+" × "+h+"<br>"+
+"AL = "+P.toFixed(2)+" × "+h+"<br>"+
 "AL = "+Al.toFixed(2)+" "+u+"²<br><br>"+
 
 "<b>4️⃣ Área total</b><br>"+
