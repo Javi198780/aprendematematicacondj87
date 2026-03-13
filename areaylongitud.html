@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Juego de Geometría</title>
+<title>Geometría Visual para Niños</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:linear-gradient(135deg,#89f7fe,#66a6ff);
+background:linear-gradient(135deg,#d4fc79,#96e6a1);
 text-align:center;
 padding:20px;
 }
@@ -20,10 +20,6 @@ margin:auto;
 padding:25px;
 border-radius:15px;
 box-shadow:0px 5px 20px rgba(0,0,0,0.2);
-}
-
-h1{
-color:#2c3e50;
 }
 
 select,input,button{
@@ -40,33 +36,18 @@ border:none;
 cursor:pointer;
 }
 
-button:hover{
-background:#1e8449;
-}
-
 canvas{
 border:2px solid #ccc;
 border-radius:10px;
-margin-top:10px;
+margin-top:15px;
 }
 
-.resultado{
-font-size:20px;
-margin-top:10px;
-font-weight:bold;
-}
-
-.puntos{
-font-size:22px;
-color:#e67e22;
-margin-top:10px;
-}
-
-.juego{
-margin-top:20px;
+.proceso{
+background:#f4f6f7;
 padding:15px;
-background:#f7f9fb;
+margin-top:15px;
 border-radius:10px;
+font-size:18px;
 }
 
 </style>
@@ -77,11 +58,11 @@ border-radius:10px;
 
 <div class="container">
 
-<h1>📐 Juego de Geometría</h1>
+<h1>📐 Aprendamos Geometría</h1>
 
-<p><b>Calculadora de Figuras</b></p>
+<p>Selecciona una figura</p>
 
-<select id="figura" onchange="dibujar()">
+<select id="figura" onchange="cambiarFigura()">
 
 <option value="">Seleccionar</option>
 <option value="cuadrado">Cuadrado</option>
@@ -92,33 +73,13 @@ border-radius:10px;
 
 <div id="campos"></div>
 
-<canvas id="canvas" width="400" height="250"></canvas>
+<canvas id="canvas" width="450" height="250"></canvas>
 
 <br>
 
-<button onclick="calcular()">Calcular</button>
+<button onclick="calcular()">Calcular Área</button>
 
-<div class="resultado" id="resultado"></div>
-
-<hr>
-
-<div class="juego">
-
-<h2>🎮 Modo Juego</h2>
-
-<p id="pregunta"></p>
-
-<input type="number" id="respuesta" placeholder="Tu respuesta">
-
-<br>
-
-<button onclick="verificar()">Responder</button>
-
-<div class="resultado" id="resultadoJuego"></div>
-
-<div class="puntos">⭐ Puntos: <span id="puntos">0</span></div>
-
-</div>
+<div class="proceso" id="proceso"></div>
 
 </div>
 
@@ -127,14 +88,11 @@ border-radius:10px;
 let canvas=document.getElementById("canvas");
 let ctx=canvas.getContext("2d");
 
-let puntos=0;
-let respuestaCorrecta=0;
-
 function limpiar(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-function dibujar(){
+function cambiarFigura(){
 
 let figura=document.getElementById("figura").value;
 
@@ -145,9 +103,6 @@ if(figura=="cuadrado"){
 document.getElementById("campos").innerHTML=
 "Lado: <input type='number' id='lado'>";
 
-ctx.fillStyle="#3498db";
-ctx.fillRect(150,60,100,100);
-
 }
 
 if(figura=="rectangulo"){
@@ -155,21 +110,12 @@ if(figura=="rectangulo"){
 document.getElementById("campos").innerHTML=
 "Base: <input type='number' id='base'><br>Altura: <input type='number' id='altura'>";
 
-ctx.fillStyle="#9b59b6";
-ctx.fillRect(120,80,160,90);
-
 }
 
 if(figura=="circulo"){
 
 document.getElementById("campos").innerHTML=
 "Radio: <input type='number' id='radio'>";
-
-ctx.fillStyle="#f1c40f";
-
-ctx.beginPath();
-ctx.arc(200,120,60,0,Math.PI*2);
-ctx.fill();
 
 }
 
@@ -179,15 +125,26 @@ function calcular(){
 
 let figura=document.getElementById("figura").value;
 
-let area=0;
-let perimetro=0;
+limpiar();
+
+let texto="";
 
 if(figura=="cuadrado"){
 
 let lado=parseFloat(document.getElementById("lado").value);
 
-area=lado*lado;
-perimetro=4*lado;
+ctx.fillStyle="#3498db";
+ctx.fillRect(170,60,100,100);
+
+ctx.fillStyle="black";
+ctx.fillText("Lado = "+lado,180,50);
+
+let area=lado*lado;
+
+texto+="Paso 1: Área = lado × lado <br>";
+texto+="Paso 2: Área = "+lado+" × "+lado+"<br>";
+texto+="Paso 3: Área = "+area+"<br><br>";
+texto+="⭐ ¡Excelente trabajo!";
 
 }
 
@@ -196,8 +153,19 @@ if(figura=="rectangulo"){
 let base=parseFloat(document.getElementById("base").value);
 let altura=parseFloat(document.getElementById("altura").value);
 
-area=base*altura;
-perimetro=2*(base+altura);
+ctx.fillStyle="#9b59b6";
+ctx.fillRect(140,80,180,90);
+
+ctx.fillStyle="black";
+ctx.fillText("Base = "+base,190,70);
+ctx.fillText("Altura = "+altura,330,120);
+
+let area=base*altura;
+
+texto+="Paso 1: Área = base × altura <br>";
+texto+="Paso 2: Área = "+base+" × "+altura+"<br>";
+texto+="Paso 3: Área = "+area+"<br><br>";
+texto+="⭐ ¡Muy bien!";
 
 }
 
@@ -205,74 +173,27 @@ if(figura=="circulo"){
 
 let r=parseFloat(document.getElementById("radio").value);
 
-area=Math.PI*r*r;
-perimetro=2*Math.PI*r;
+ctx.fillStyle="#f1c40f";
+
+ctx.beginPath();
+ctx.arc(220,120,60,0,Math.PI*2);
+ctx.fill();
+
+ctx.fillStyle="black";
+ctx.fillText("Radio = "+r,210,40);
+
+let area=Math.PI*r*r;
+
+texto+="Paso 1: Área = π × radio² <br>";
+texto+="Paso 2: Área = 3.14 × "+r+"²<br>";
+texto+="Paso 3: Área = "+area.toFixed(2)+"<br><br>";
+texto+="⭐ ¡Genial!";
 
 }
 
-document.getElementById("resultado").innerHTML=
-"Área = "+area.toFixed(2)+" | Perímetro = "+perimetro.toFixed(2);
+document.getElementById("proceso").innerHTML=texto;
 
 }
-
-function nuevaPregunta(){
-
-let tipo=Math.floor(Math.random()*2);
-
-if(tipo==0){
-
-let lado=Math.floor(Math.random()*10)+1;
-
-respuestaCorrecta=lado*lado;
-
-document.getElementById("pregunta").innerHTML=
-"¿Cuál es el área de un cuadrado con lado "+lado+" ?";
-
-}
-
-else{
-
-let base=Math.floor(Math.random()*10)+1;
-let altura=Math.floor(Math.random()*10)+1;
-
-respuestaCorrecta=base*altura;
-
-document.getElementById("pregunta").innerHTML=
-"¿Cuál es el área de un rectángulo con base "+base+" y altura "+altura+" ?";
-
-}
-
-}
-
-function verificar(){
-
-let r=parseFloat(document.getElementById("respuesta").value);
-
-if(r==respuestaCorrecta){
-
-puntos++;
-
-document.getElementById("resultadoJuego").innerHTML=
-"✅ ¡Correcto!";
-
-}
-
-else{
-
-document.getElementById("resultadoJuego").innerHTML=
-"❌ Incorrecto. La respuesta era "+respuestaCorrecta;
-
-}
-
-document.getElementById("puntos").innerHTML=puntos;
-
-document.getElementById("respuesta").value="";
-
-nuevaPregunta();
-
-}
-
-nuevaPregunta();
 
 </script>
 
