@@ -339,22 +339,46 @@ let a=parseFloat(document.getElementById("apotema").value);
 peri=5*l;
 area=(peri*a)/2;
 
+// vertices
+let cx=300;
+let cy=190;
+let r=120;
+
+let puntos=[];
+
+for(let i=0;i<5;i++){
+let ang=(Math.PI*2/5)*i-Math.PI/2;
+let x=cx+r*Math.cos(ang);
+let y=cy+r*Math.sin(ang);
+puntos.push({x,y});
+}
+
+// dibujar figura
 ctx.beginPath();
-ctx.moveTo(300,70);
-ctx.lineTo(400,150);
-ctx.lineTo(360,280);
-ctx.lineTo(240,280);
-ctx.lineTo(200,150);
+ctx.moveTo(puntos[0].x,puntos[0].y);
+
+for(let i=1;i<5;i++)
+ctx.lineTo(puntos[i].x,puntos[i].y);
+
 ctx.closePath();
 ctx.stroke();
 
+// centro
 ctx.beginPath();
-ctx.moveTo(300,190);
-ctx.lineTo(300,140);
+ctx.arc(cx,cy,3,0,Math.PI*2);
+ctx.fill();
+
+// punto medio del primer lado
+let mx=(puntos[0].x+puntos[1].x)/2;
+let my=(puntos[0].y+puntos[1].y)/2;
+
+// apotema correcto
+ctx.beginPath();
+ctx.moveTo(cx,cy);
+ctx.lineTo(mx,my);
 ctx.stroke();
 
-ctx.fillText("L = "+l+" "+unidad,400,150);
-ctx.fillText("Ap = "+a+" "+unidad,305,180);
+ctx.fillText("Ap = "+a+" "+unidad,(cx+mx)/2,(cy+my)/2);
 
 textoArea="Perímetro = 5 × lado <br>5 × "+l+" = "+peri+"<br><br>";
 textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad+"²";
@@ -371,23 +395,45 @@ let a=parseFloat(document.getElementById("apotema").value);
 peri=6*l;
 area=(peri*a)/2;
 
+let cx=300;
+let cy=190;
+let r=120;
+
+let puntos=[];
+
+for(let i=0;i<6;i++){
+let ang=(Math.PI*2/6)*i-Math.PI/2;
+let x=cx+r*Math.cos(ang);
+let y=cy+r*Math.sin(ang);
+puntos.push({x,y});
+}
+
+// dibujar figura
 ctx.beginPath();
-ctx.moveTo(300,70);
-ctx.lineTo(420,150);
-ctx.lineTo(420,250);
-ctx.lineTo(300,310);
-ctx.lineTo(180,250);
-ctx.lineTo(180,150);
+ctx.moveTo(puntos[0].x,puntos[0].y);
+
+for(let i=1;i<6;i++)
+ctx.lineTo(puntos[i].x,puntos[i].y);
+
 ctx.closePath();
 ctx.stroke();
 
+// centro
 ctx.beginPath();
-ctx.moveTo(300,200);
-ctx.lineTo(300,140);
+ctx.arc(cx,cy,3,0,Math.PI*2);
+ctx.fill();
+
+// punto medio de un lado
+let mx=(puntos[0].x+puntos[1].x)/2;
+let my=(puntos[0].y+puntos[1].y)/2;
+
+// apotema correcto
+ctx.beginPath();
+ctx.moveTo(cx,cy);
+ctx.lineTo(mx,my);
 ctx.stroke();
 
-ctx.fillText("L = "+l+" "+unidad,420,200);
-ctx.fillText("Ap = "+a+" "+unidad,305,180);
+ctx.fillText("Ap = "+a+" "+unidad,(cx+mx)/2,(cy+my)/2);
 
 textoArea="Perímetro = 6 × lado <br>6 × "+l+" = "+peri+"<br><br>";
 textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad+"²";
