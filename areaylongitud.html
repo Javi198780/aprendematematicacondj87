@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Geometría Divertida</title>
+<title>Geometría para Niños</title>
 
 <style>
 
@@ -15,7 +15,7 @@ padding:20px;
 
 .container{
 background:white;
-width:900px;
+width:950px;
 margin:auto;
 padding:25px;
 border-radius:15px;
@@ -54,7 +54,7 @@ background:#f4f6f7;
 padding:15px;
 border-radius:10px;
 width:40%;
-font-size:18px;
+font-size:17px;
 box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
@@ -73,7 +73,7 @@ font-size:17px;
 
 <div class="container">
 
-<h1>📐 Geometría para Niños</h1>
+<h1>📐 Geometría Interactiva</h1>
 
 Figura
 
@@ -100,7 +100,7 @@ Unidad
 
 <div id="campos"></div>
 
-<canvas id="canvas" width="550" height="320"></canvas>
+<canvas id="canvas" width="600" height="350"></canvas>
 
 <br>
 
@@ -109,12 +109,12 @@ Unidad
 <div class="resultados">
 
 <div class="tarjeta">
-<b>Área</b>
+<h3>Área</h3>
 <div id="areaResultado">-</div>
 </div>
 
 <div class="tarjeta">
-<b>Perímetro / Longitud</b>
+<h3>Perímetro / Longitud</h3>
 <div id="periResultado">-</div>
 </div>
 
@@ -177,7 +177,9 @@ let unidad=document.getElementById("unidad").value;
 
 let area=0;
 let peri=0;
-let texto="";
+
+let textoArea="";
+let textoPeri="";
 
 ctx.font="16px Arial";
 
@@ -185,13 +187,14 @@ if(f=="cuadrado"){
 
 let l=parseFloat(document.getElementById("lado").value);
 
-ctx.strokeRect(220,90,120,120);
-ctx.fillText("Lado "+l+" "+unidad,240,80);
+ctx.strokeRect(250,100,120,120);
 
 area=l*l;
 peri=4*l;
 
-texto="Área = lado × lado<br>"+l+" × "+l;
+textoArea="Área = lado × lado <br>"+l+" × "+l+" = "+area+" "+unidad+"²";
+
+textoPeri="Perímetro = 4 × lado <br>4 × "+l+" = "+peri+" "+unidad;
 
 }
 
@@ -200,15 +203,14 @@ if(f=="rectangulo"){
 let b=parseFloat(document.getElementById("base").value);
 let h=parseFloat(document.getElementById("altura").value);
 
-ctx.strokeRect(180,100,200,120);
-
-ctx.fillText("Base "+b+" "+unidad,250,90);
-ctx.fillText("Altura "+h+" "+unidad,400,160);
+ctx.strokeRect(200,110,200,120);
 
 area=b*h;
 peri=2*(b+h);
 
-texto="Área = base × altura<br>"+b+" × "+h;
+textoArea="Área = base × altura <br>"+b+" × "+h+" = "+area+" "+unidad+"²";
+
+textoPeri="Perímetro = 2 × (b + h)<br>2 × ("+b+" + "+h+") = "+peri+" "+unidad;
 
 }
 
@@ -217,20 +219,20 @@ if(f=="circulo"){
 let r=parseFloat(document.getElementById("radio").value);
 
 ctx.beginPath();
-ctx.arc(270,160,80,0,Math.PI*2);
+ctx.arc(300,170,80,0,Math.PI*2);
 ctx.stroke();
 
 ctx.beginPath();
-ctx.moveTo(270,160);
-ctx.lineTo(350,160);
+ctx.moveTo(300,170);
+ctx.lineTo(380,170);
 ctx.stroke();
-
-ctx.fillText("Radio "+r+" "+unidad,290,150);
 
 area=Math.PI*r*r;
 peri=2*Math.PI*r;
 
-texto="Área = π × r²";
+textoArea="Área = π × r² <br>3.14 × "+r+"² = "+area.toFixed(2)+" "+unidad+"²";
+
+textoPeri="Longitud = 2 × π × r <br>2 × 3.14 × "+r+" = "+peri.toFixed(2)+" "+unidad;
 
 }
 
@@ -240,26 +242,22 @@ let b=parseFloat(document.getElementById("base").value);
 let h=parseFloat(document.getElementById("altura").value);
 
 ctx.beginPath();
-ctx.moveTo(270,70);
-ctx.lineTo(150,230);
-ctx.lineTo(390,230);
+ctx.moveTo(300,80);
+ctx.lineTo(180,250);
+ctx.lineTo(420,250);
 ctx.closePath();
 ctx.stroke();
 
-let centroBase=270;
-
 ctx.beginPath();
-ctx.moveTo(centroBase,230);
-ctx.lineTo(centroBase,70);
+ctx.moveTo(300,250);
+ctx.lineTo(300,80);
 ctx.stroke();
 
-ctx.fillText("Base "+b+" "+unidad,250,250);
-ctx.fillText("Altura "+h+" "+unidad,centroBase+10,150);
-
 area=(b*h)/2;
-peri=b+Math.sqrt((b/2)*(b/2)+h*h)*2;
 
-texto="Área = (base × altura) / 2";
+textoArea="Área = (b × h) / 2 <br>("+b+" × "+h+") / 2 = "+area+" "+unidad+"²";
+
+textoPeri="Perímetro = suma de sus lados";
 
 }
 
@@ -269,31 +267,28 @@ let D=parseFloat(document.getElementById("D").value);
 let d=parseFloat(document.getElementById("d").value);
 
 ctx.beginPath();
-ctx.moveTo(270,60);
-ctx.lineTo(390,160);
-ctx.lineTo(270,260);
-ctx.lineTo(150,160);
+ctx.moveTo(300,60);
+ctx.lineTo(420,170);
+ctx.lineTo(300,280);
+ctx.lineTo(180,170);
 ctx.closePath();
 ctx.stroke();
 
 ctx.beginPath();
-ctx.moveTo(270,60);
-ctx.lineTo(270,260);
+ctx.moveTo(300,60);
+ctx.lineTo(300,280);
 ctx.stroke();
 
 ctx.beginPath();
-ctx.moveTo(150,160);
-ctx.lineTo(390,160);
+ctx.moveTo(180,170);
+ctx.lineTo(420,170);
 ctx.stroke();
-
-ctx.fillText("D "+D+" "+unidad,280,160);
-ctx.fillText("d "+d+" "+unidad,240,150);
 
 area=(D*d)/2;
 
-peri=4*Math.sqrt((D/2)*(D/2)+(d/2)*(d/2));
+textoArea="Área = (D × d) / 2 <br>("+D+" × "+d+") / 2 = "+area+" "+unidad+"²";
 
-texto="Área = (D × d) / 2";
+textoPeri="Perímetro = 4 × lado";
 
 }
 
@@ -304,22 +299,23 @@ let b=parseFloat(document.getElementById("b").value);
 let h=parseFloat(document.getElementById("h").value);
 
 ctx.beginPath();
-ctx.moveTo(170,230);
-ctx.lineTo(370,230);
-ctx.lineTo(330,120);
-ctx.lineTo(210,120);
+ctx.moveTo(200,250);
+ctx.lineTo(400,250);
+ctx.lineTo(360,120);
+ctx.lineTo(240,120);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("B "+B+" "+unidad,250,250);
-ctx.fillText("b "+b+" "+unidad,260,110);
-ctx.fillText("h "+h+" "+unidad,140,170);
+ctx.beginPath();
+ctx.moveTo(300,250);
+ctx.lineTo(300,120);
+ctx.stroke();
 
 area=((B+b)*h)/2;
 
-peri=B+b+2*Math.sqrt(h*h+((B-b)/2)*((B-b)/2));
+textoArea="Área = (B + b) × h / 2 <br>("+B+" + "+b+") × "+h+" / 2 = "+area+" "+unidad+"²";
 
-texto="Área = (B + b) × h / 2";
+textoPeri="Perímetro = suma de sus lados";
 
 }
 
@@ -332,18 +328,23 @@ peri=5*l;
 area=(peri*a)/2;
 
 ctx.beginPath();
-ctx.moveTo(270,60);
-ctx.lineTo(370,130);
-ctx.lineTo(330,250);
-ctx.lineTo(210,250);
-ctx.lineTo(170,130);
+ctx.moveTo(300,70);
+ctx.lineTo(400,150);
+ctx.lineTo(360,280);
+ctx.lineTo(240,280);
+ctx.lineTo(200,150);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("lado "+l+" "+unidad,380,150);
-ctx.fillText("apotema "+a+" "+unidad,260,170);
+ctx.beginPath();
+ctx.moveTo(300,190);
+ctx.lineTo(300,140);
+ctx.stroke();
 
-texto="Área = (Perímetro × apotema) / 2";
+textoArea="Perímetro = 5 × lado <br>5 × "+l+" = "+peri+"<br><br>";
+textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad+"²";
+
+textoPeri="Perímetro = "+peri+" "+unidad;
 
 }
 
@@ -356,25 +357,29 @@ peri=6*l;
 area=(peri*a)/2;
 
 ctx.beginPath();
-ctx.moveTo(270,60);
-ctx.lineTo(380,130);
-ctx.lineTo(380,230);
-ctx.lineTo(270,290);
-ctx.lineTo(160,230);
-ctx.lineTo(160,130);
+ctx.moveTo(300,70);
+ctx.lineTo(420,150);
+ctx.lineTo(420,250);
+ctx.lineTo(300,310);
+ctx.lineTo(180,250);
+ctx.lineTo(180,150);
 ctx.closePath();
 ctx.stroke();
 
-ctx.fillText("lado "+l+" "+unidad,390,170);
-ctx.fillText("apotema "+a+" "+unidad,260,170);
+ctx.beginPath();
+ctx.moveTo(300,200);
+ctx.lineTo(300,140);
+ctx.stroke();
 
-texto="Área = (Perímetro × apotema) / 2";
+textoArea="Perímetro = 6 × lado <br>6 × "+l+" = "+peri+"<br><br>";
+textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad+"²";
+
+textoPeri="Perímetro = "+peri+" "+unidad;
 
 }
 
-document.getElementById("areaResultado").innerHTML=area.toFixed(2)+" "+unidad+"²";
-document.getElementById("periResultado").innerHTML=peri.toFixed(2)+" "+unidad;
-document.getElementById("proceso").innerHTML=texto;
+document.getElementById("areaResultado").innerHTML=textoArea;
+document.getElementById("periResultado").innerHTML=textoPeri;
 
 }
 
