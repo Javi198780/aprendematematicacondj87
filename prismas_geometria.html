@@ -155,8 +155,9 @@ let d=document.getElementById("paso1");
 
 d.innerHTML=
 
-"<h3>Paso 1: Área de la base</h3>"+
-"<div class='formula'>A = largo × ancho</div>"+
+"<h3>📘 Paso 1: Área de la base</h3>"+
+"<b>Fórmula:</b> A = largo × ancho<br><br>"+
+
 "A = "+v.l+" × "+v.a+"<br>"+
 "A = "+v.Ab.toFixed(2)+" cm²";
 
@@ -170,8 +171,9 @@ let d=document.getElementById("paso2");
 
 d.innerHTML=
 
-"<h3>Paso 2: Perímetro de la base</h3>"+
-"<div class='formula'>P = 2(largo + ancho)</div>"+
+"<h3>📘 Paso 2: Perímetro de la base</h3>"+
+"<b>Fórmula:</b> P = 2(largo + ancho)<br><br>"+
+
 "P = 2("+v.l+" + "+v.a+")<br>"+
 "P = "+v.P.toFixed(2)+" cm";
 
@@ -185,8 +187,9 @@ let d=document.getElementById("paso3");
 
 d.innerHTML=
 
-"<h3>Paso 3: Área lateral</h3>"+
-"<div class='formula'>AL = P × altura</div>"+
+"<h3>📘 Paso 3: Área lateral</h3>"+
+"<b>Fórmula:</b> AL = Perímetro × altura<br><br>"+
+
 "AL = "+v.P.toFixed(2)+" × "+v.h+"<br>"+
 "AL = "+v.AL.toFixed(2)+" cm²";
 
@@ -200,14 +203,37 @@ let d=document.getElementById("paso4");
 
 d.innerHTML=
 
-"<h3>Paso 4: Volumen</h3>"+
-"<div class='formula'>V = Área base × altura</div>"+
-"V = "+v.Ab.toFixed(2)+" × "+v.h+"<br>"+
-"V = "+v.V.toFixed(2)+" cm³";
+"<h3>📘 Paso 4: Área total</h3>"+
+"<b>Fórmula:</b> AT = 2 × Área base + Área lateral<br><br>"+
+
+"AT = 2 × "+v.Ab.toFixed(2)+" + "+v.AL.toFixed(2)+"<br>"+
+"AT = "+v.AT.toFixed(2)+" cm²";
 
 d.style.display="block";
 
 }
+
+if(pasoActual==5){
+
+let d=document.createElement("div");
+
+d.className="paso";
+
+d.innerHTML=
+
+"<h3>📘 Paso 5: Volumen</h3>"+
+"<b>Fórmula:</b> V = Área base × altura<br><br>"+
+
+"V = "+v.Ab.toFixed(2)+" × "+v.h+"<br>"+
+"V = "+v.V.toFixed(2)+" cm³";
+
+document.querySelector(".container").appendChild(d);
+
+d.style.display="block";
+
+}
+
+
 
 }
 
