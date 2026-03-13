@@ -2,42 +2,70 @@
 <html>
 <head>
 
-<title>Calculadora de Prismas</title>
+<title>Prismas Geométricos Interactivos</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:#e8f6f3;
+background:#eaf2f8;
 text-align:center;
 padding:20px;
 }
 
 .container{
 background:white;
-width:950px;
+width:900px;
 margin:auto;
 padding:20px;
 border-radius:12px;
 box-shadow:0 0 10px gray;
 }
 
-input,select,button{
+h2{
+color:#2c3e50;
+}
+
+input,button{
 padding:8px;
 margin:6px;
 font-size:16px;
 }
 
-canvas{
-border:1px solid gray;
-margin-top:15px;
+button{
+background:#3498db;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
 }
 
-.resultado{
-margin-top:15px;
-font-size:18px;
-background:#f2f3f4;
+button:hover{
+background:#2980b9;
+}
+
+canvas{
+border:1px solid gray;
+margin-top:20px;
+}
+
+.paso{
+display:none;
+background:#f4f6f6;
 padding:15px;
+margin-top:10px;
+border-radius:10px;
+}
+
+.formula{
+font-size:18px;
+color:#1a5276;
+}
+
+.ejercicio{
+background:#fcf3cf;
+padding:15px;
+margin-top:20px;
 border-radius:10px;
 }
 
@@ -49,277 +77,231 @@ border-radius:10px;
 
 <div class="container">
 
-<h2>Calculadora de Prismas</h2>
+<h2>Prismas Geométricos Interactivos</h2>
 
-Tipo de prisma
+Largo
+<input id="l" type="number" step="any">
 
-<select id="tipo" onchange="cambiarCampos()">
+Ancho
+<input id="a" type="number" step="any">
 
-<option value="">Seleccionar</option>
-<option value="rectangular">Prisma rectangular</option>
-<option value="triangular">Prisma triangular</option>
-<option value="pentagonal">Prisma pentagonal</option>
-<option value="hexagonal">Prisma hexagonal</option>
-<option value="cilindro">Cilindro</option>
-
-</select>
+Altura
+<input id="h" type="number" step="any">
 
 <br>
 
-Unidad
+<button onclick="iniciar()">Calcular</button>
 
-<select id="unidad">
+<button onclick="siguientePaso()">Siguiente paso</button>
 
-<option value="cm">cm</option>
-<option value="m">m</option>
-
-</select>
-
-<div id="campos"></div>
-
-<br>
-
-<button onclick="calcular()">Calcular</button>
-
-<br>
+<button onclick="generarEjercicio()">Modo ejercicio</button>
 
 <canvas id="canvas" width="600" height="350"></canvas>
 
-<div class="resultado" id="resultado"></div>
+<div id="paso1" class="paso"></div>
+<div id="paso2" class="paso"></div>
+<div id="paso3" class="paso"></div>
+<div id="paso4" class="paso"></div>
+
+<div id="ejercicio" class="ejercicio"></div>
 
 </div>
 
 <script>
 
+let pasoActual=0;
+
 let canvas=document.getElementById("canvas");
 let ctx=canvas.getContext("2d");
 
-function limpiar(){
-ctx.clearRect(0,0,600,350);
-}
+function iniciar(){
 
-function cambiarCampos(){
-
-let tipo=document.getElementById("tipo").value;
-let html="";
-
-if(tipo=="rectangular"){
-
-html="Largo <input id='l' type='number' step='any'>"+
-" Ancho <input id='a' type='number' step='any'>"+
-" Altura <input id='h' type='number' step='any'>";
-
-}
-
-if(tipo=="triangular"){
-
-html="Base <input id='b' type='number' step='any'>"+
-" Altura triángulo <input id='ht' type='number' step='any'>"+
-" Altura prisma <input id='h' type='number' step='any'>";
-
-}
-
-if(tipo=="pentagonal" || tipo=="hexagonal"){
-
-html="Lado <input id='lado' type='number' step='any'>"+
-" Apotema <input id='ap' type='number' step='any'>"+
-" Altura prisma <input id='h' type='number' step='any'>";
-
-}
-
-if(tipo=="cilindro"){
-
-html="Radio <input id='r' type='number' step='any'>"+
-" Altura <input id='h' type='number' step='any'>";
-
-}
-
-document.getElementById("campos").innerHTML=html;
-
-limpiar();
-
-}
-
-function calcular(){
-
-limpiar();
-
-let tipo=document.getElementById("tipo").value;
-let u=document.getElementById("unidad").value;
-
-let Ab=0;
-let Al=0;
-let At=0;
-let V=0;
-
-ctx.font="16px Arial";
-
-if(tipo=="rectangular"){
+pasoActual=0;
 
 let l=parseFloat(document.getElementById("l").value);
 let a=parseFloat(document.getElementById("a").value);
 let h=parseFloat(document.getElementById("h").value);
 
-Ab=l*a;
-Al=2*(l*h)+2*(a*h);
-At=2*Ab+Al;
-V=Ab*h;
+if(isNaN(l)||isNaN(a)||isNaN(h)){
 
-/* dibujo */
-
-ctx.strokeRect(180,150,180,90);
-ctx.strokeRect(240,110,180,90);
-
-ctx.beginPath();
-ctx.moveTo(180,150);
-ctx.lineTo(240,110);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(360,150);
-ctx.lineTo(420,110);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(180,240);
-ctx.lineTo(240,200);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(360,240);
-ctx.lineTo(420,200);
-ctx.stroke();
-
-/* valores */
-
-ctx.fillText("L="+l+" "+u,260,270);
-ctx.fillText("A="+a+" "+u,430,190);
-ctx.fillText("H="+h+" "+u,150,200);
+alert("Ingrese todos los valores");
+return;
 
 }
 
-if(tipo=="triangular"){
+let Ab=l*a;
+let P=2*(l+a);
+let AL=P*h;
+let AT=2*Ab+AL;
+let V=Ab*h;
 
-let b=parseFloat(document.getElementById("b").value);
-let ht=parseFloat(document.getElementById("ht").value);
-let h=parseFloat(document.getElementById("h").value);
+window.valores={l,a,h,Ab,P,AL,AT,V};
 
-Ab=(b*ht)/2;
+document.querySelectorAll(".paso").forEach(p=>p.style.display="none");
 
-let lado=Math.sqrt((b/2)**2+ht**2);
-let per=b+lado+lado;
-
-Al=per*h;
-At=2*Ab+Al;
-V=Ab*h;
-
-ctx.beginPath();
-ctx.moveTo(250,230);
-ctx.lineTo(350,230);
-ctx.lineTo(300,160);
-ctx.closePath();
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(300,160);
-ctx.lineTo(380,120);
-ctx.lineTo(430,200);
-ctx.lineTo(350,230);
-ctx.stroke();
-
-ctx.fillText("Base "+b+" "+u,270,250);
-ctx.fillText("Altura "+ht+" "+u,305,200);
-ctx.fillText("H "+h+" "+u,410,170);
+animarPrisma();
 
 }
 
-if(tipo=="pentagonal" || tipo=="hexagonal"){
+function siguientePaso(){
 
-let lado=parseFloat(document.getElementById("lado").value);
-let ap=parseFloat(document.getElementById("ap").value);
-let h=parseFloat(document.getElementById("h").value);
+pasoActual++;
 
-let n=(tipo=="pentagonal")?5:6;
+let v=window.valores;
 
-let P=n*lado;
+if(pasoActual==1){
 
-Ab=(P*ap)/2;
-Al=P*h;
-At=2*Ab+Al;
-V=Ab*h;
+let d=document.getElementById("paso1");
 
-ctx.strokeRect(230,140,150,100);
-ctx.strokeRect(280,100,150,100);
+d.innerHTML=
 
-ctx.fillText("L "+lado+" "+u,310,260);
-ctx.fillText("Ap "+ap+" "+u,410,190);
-ctx.fillText("H "+h+" "+u,200,190);
+"<h3>Paso 1: Área de la base</h3>"+
+"<div class='formula'>A = largo × ancho</div>"+
+"A = "+v.l+" × "+v.a+"<br>"+
+"A = "+v.Ab.toFixed(2)+" cm²";
+
+d.style.display="block";
 
 }
 
-if(tipo=="cilindro"){
+if(pasoActual==2){
 
-let r=parseFloat(document.getElementById("r").value);
-let h=parseFloat(document.getElementById("h").value);
+let d=document.getElementById("paso2");
 
-Ab=Math.PI*r*r;
-Al=2*Math.PI*r*h;
-At=2*Ab+Al;
-V=Ab*h;
+d.innerHTML=
 
-ctx.beginPath();
-ctx.ellipse(300,120,70,25,0,0,Math.PI*2);
-ctx.stroke();
+"<h3>Paso 2: Perímetro de la base</h3>"+
+"<div class='formula'>P = 2(largo + ancho)</div>"+
+"P = 2("+v.l+" + "+v.a+")<br>"+
+"P = "+v.P.toFixed(2)+" cm";
 
-ctx.beginPath();
-ctx.ellipse(300,230,70,25,0,0,Math.PI*2);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(230,120);
-ctx.lineTo(230,230);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(370,120);
-ctx.lineTo(370,230);
-ctx.stroke();
-
-ctx.fillText("r "+r+" "+u,380,130);
-ctx.fillText("h "+h+" "+u,210,180);
+d.style.display="block";
 
 }
 
-let P = 2*(l+a);
+if(pasoActual==3){
 
-document.getElementById("resultado").innerHTML =
+let d=document.getElementById("paso3");
 
-"<h2>Procedimiento paso a paso</h2>"+
+d.innerHTML=
 
-"<b>1️⃣ Área de la base</b><br>"+
-"A = largo × ancho<br>"+
-"A = "+l+" × "+a+"<br>"+
-"A = "+Ab.toFixed(2)+" "+u+"²<br><br>"+
+"<h3>Paso 3: Área lateral</h3>"+
+"<div class='formula'>AL = P × altura</div>"+
+"AL = "+v.P.toFixed(2)+" × "+v.h+"<br>"+
+"AL = "+v.AL.toFixed(2)+" cm²";
 
-"<b>2️⃣ Perímetro de la base</b><br>"+
-"P = 2(largo + ancho)<br>"+
-"P = 2("+l+" + "+a+")<br>"+
-"P = "+P.toFixed(2)+" "+u+"<br><br>"+
+d.style.display="block";
 
-"<b>3️⃣ Área lateral</b><br>"+
-"AL = Perímetro × altura<br>"+
-"AL = "+P.toFixed(2)+" × "+h+"<br>"+
-"AL = "+Al.toFixed(2)+" "+u+"²<br><br>"+
+}
 
-"<b>4️⃣ Área total</b><br>"+
-"AT = 2 × Área base + Área lateral<br>"+
-"AT = 2 × "+Ab.toFixed(2)+" + "+Al.toFixed(2)+"<br>"+
-"AT = "+At.toFixed(2)+" "+u+"²<br><br>"+
+if(pasoActual==4){
 
-"<b>5️⃣ Volumen</b><br>"+
-"V = Área base × altura<br>"+
-"V = "+Ab.toFixed(2)+" × "+h+"<br>"+
-"V = "+V.toFixed(2)+" "+u+"³";
+let d=document.getElementById("paso4");
+
+d.innerHTML=
+
+"<h3>Paso 4: Volumen</h3>"+
+"<div class='formula'>V = Área base × altura</div>"+
+"V = "+v.Ab.toFixed(2)+" × "+v.h+"<br>"+
+"V = "+v.V.toFixed(2)+" cm³";
+
+d.style.display="block";
+
+}
+
+}
+
+function animarPrisma(){
+
+let x=180;
+let y=200;
+
+ctx.clearRect(0,0,600,350);
+
+let altura=0;
+
+let anim=setInterval(()=>{
+
+ctx.clearRect(0,0,600,350);
+
+ctx.strokeRect(x,y,200,100);
+ctx.strokeRect(x+50,y-altura,200,100);
+
+ctx.beginPath();
+ctx.moveTo(x,y);
+ctx.lineTo(x+50,y-altura);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(x+200,y);
+ctx.lineTo(x+250,y-altura);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(x,y+100);
+ctx.lineTo(x+50,y+100-altura);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(x+200,y+100);
+ctx.lineTo(x+250,y+100-altura);
+ctx.stroke();
+
+if(altura<80){
+
+altura+=4;
+
+}else{
+
+clearInterval(anim);
+
+let v=window.valores;
+
+ctx.fillText("L="+v.l,260,320);
+ctx.fillText("A="+v.a,390,250);
+ctx.fillText("H="+v.h,150,250);
+
+}
+
+},30);
+
+}
+
+function generarEjercicio(){
+
+let l=Math.floor(Math.random()*9)+2;
+let a=Math.floor(Math.random()*9)+2;
+let h=Math.floor(Math.random()*9)+2;
+
+let Ab=l*a;
+let V=Ab*h;
+
+document.getElementById("ejercicio").innerHTML=
+
+"<h3>Ejercicio</h3>"+
+"Un prisma rectangular tiene:<br>"+
+"Largo = "+l+" cm<br>"+
+"Ancho = "+a+" cm<br>"+
+"Altura = "+h+" cm<br><br>"+
+"¿Cuál es el volumen?<br><br>"+
+"<input id='respuesta'>"+
+"<button onclick='verificar("+V+")'>Verificar</button>";
+
+}
+
+function verificar(v){
+
+let r=parseFloat(document.getElementById("respuesta").value);
+
+if(r==v){
+
+alert("Correcto 🎉");
+
+}else{
+
+alert("Incorrecto. El resultado era "+v);
+
+}
 
 }
 
