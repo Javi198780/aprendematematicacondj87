@@ -339,7 +339,6 @@ let a=parseFloat(document.getElementById("apotema").value);
 peri=5*l;
 area=(peri*a)/2;
 
-// vertices
 let cx=300;
 let cy=190;
 let r=120;
@@ -357,28 +356,40 @@ puntos.push({x,y});
 ctx.beginPath();
 ctx.moveTo(puntos[0].x,puntos[0].y);
 
-for(let i=1;i<5;i++)
+for(let i=1;i<5;i++){
 ctx.lineTo(puntos[i].x,puntos[i].y);
+}
 
 ctx.closePath();
 ctx.stroke();
+
+// dibujar lados con valores
+for(let i=0;i<5;i++){
+
+let p1=puntos[i];
+let p2=puntos[(i+1)%5];
+
+let mx=(p1.x+p2.x)/2;
+let my=(p1.y+p2.y)/2;
+
+ctx.fillText(l+" "+unidad,mx,my);
+}
 
 // centro
 ctx.beginPath();
 ctx.arc(cx,cy,3,0,Math.PI*2);
 ctx.fill();
 
-// punto medio del primer lado
+// apotema
 let mx=(puntos[0].x+puntos[1].x)/2;
 let my=(puntos[0].y+puntos[1].y)/2;
 
-// apotema correcto
 ctx.beginPath();
 ctx.moveTo(cx,cy);
 ctx.lineTo(mx,my);
 ctx.stroke();
 
-ctx.fillText("Ap = "+a+" "+unidad,(cx+mx)/2,(cy+my)/2);
+ctx.fillText("Ap "+a+" "+unidad,(cx+mx)/2,(cy+my)/2);
 
 textoArea="Perímetro = 5 × lado <br>5 × "+l+" = "+peri+"<br><br>";
 textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad+"²";
@@ -386,7 +397,6 @@ textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad
 textoPeri="Perímetro = "+peri+" "+unidad;
 
 }
-
 if(f=="hexagono"){
 
 let l=parseFloat(document.getElementById("lado").value);
@@ -412,28 +422,40 @@ puntos.push({x,y});
 ctx.beginPath();
 ctx.moveTo(puntos[0].x,puntos[0].y);
 
-for(let i=1;i<6;i++)
+for(let i=1;i<6;i++){
 ctx.lineTo(puntos[i].x,puntos[i].y);
+}
 
 ctx.closePath();
 ctx.stroke();
+
+// valores de lados
+for(let i=0;i<6;i++){
+
+let p1=puntos[i];
+let p2=puntos[(i+1)%6];
+
+let mx=(p1.x+p2.x)/2;
+let my=(p1.y+p2.y)/2;
+
+ctx.fillText(l+" "+unidad,mx,my);
+}
 
 // centro
 ctx.beginPath();
 ctx.arc(cx,cy,3,0,Math.PI*2);
 ctx.fill();
 
-// punto medio de un lado
+// apotema
 let mx=(puntos[0].x+puntos[1].x)/2;
 let my=(puntos[0].y+puntos[1].y)/2;
 
-// apotema correcto
 ctx.beginPath();
 ctx.moveTo(cx,cy);
 ctx.lineTo(mx,my);
 ctx.stroke();
 
-ctx.fillText("Ap = "+a+" "+unidad,(cx+mx)/2,(cy+my)/2);
+ctx.fillText("Ap "+a+" "+unidad,(cx+mx)/2,(cy+my)/2);
 
 textoArea="Perímetro = 6 × lado <br>6 × "+l+" = "+peri+"<br><br>";
 textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad+"²";
