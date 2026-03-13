@@ -182,6 +182,7 @@ let textoArea="";
 let textoPeri="";
 
 ctx.font="16px Arial";
+ctx.fillStyle="black";
 
 if(f=="cuadrado"){
 
@@ -189,11 +190,12 @@ let l=parseFloat(document.getElementById("lado").value);
 
 ctx.strokeRect(250,100,120,120);
 
+ctx.fillText("L = "+l+" "+unidad,280,90);
+
 area=l*l;
 peri=4*l;
 
 textoArea="Área = lado × lado <br>"+l+" × "+l+" = "+area+" "+unidad+"²";
-
 textoPeri="Perímetro = 4 × lado <br>4 × "+l+" = "+peri+" "+unidad;
 
 }
@@ -205,11 +207,13 @@ let h=parseFloat(document.getElementById("altura").value);
 
 ctx.strokeRect(200,110,200,120);
 
+ctx.fillText("Base = "+b+" "+unidad,270,260);
+ctx.fillText("Altura = "+h+" "+unidad,150,180);
+
 area=b*h;
 peri=2*(b+h);
 
 textoArea="Área = base × altura <br>"+b+" × "+h+" = "+area+" "+unidad+"²";
-
 textoPeri="Perímetro = 2 × (b + h)<br>2 × ("+b+" + "+h+") = "+peri+" "+unidad;
 
 }
@@ -227,11 +231,12 @@ ctx.moveTo(300,170);
 ctx.lineTo(380,170);
 ctx.stroke();
 
+ctx.fillText("Radio = "+r+" "+unidad,310,160);
+
 area=Math.PI*r*r;
 peri=2*Math.PI*r;
 
 textoArea="Área = π × r² <br>3.14 × "+r+"² = "+area.toFixed(2)+" "+unidad+"²";
-
 textoPeri="Longitud = 2 × π × r <br>2 × 3.14 × "+r+" = "+peri.toFixed(2)+" "+unidad;
 
 }
@@ -253,10 +258,12 @@ ctx.moveTo(300,250);
 ctx.lineTo(300,80);
 ctx.stroke();
 
+ctx.fillText("Base = "+b+" "+unidad,270,270);
+ctx.fillText("Altura = "+h+" "+unidad,305,170);
+
 area=(b*h)/2;
 
 textoArea="Área = (b × h) / 2 <br>("+b+" × "+h+") / 2 = "+area+" "+unidad+"²";
-
 textoPeri="Perímetro = suma de sus lados";
 
 }
@@ -284,10 +291,12 @@ ctx.moveTo(180,170);
 ctx.lineTo(420,170);
 ctx.stroke();
 
+ctx.fillText("D = "+D+" "+unidad,310,170);
+ctx.fillText("d = "+d+" "+unidad,280,50);
+
 area=(D*d)/2;
 
 textoArea="Área = (D × d) / 2 <br>("+D+" × "+d+") / 2 = "+area+" "+unidad+"²";
-
 textoPeri="Perímetro = 4 × lado";
 
 }
@@ -311,10 +320,13 @@ ctx.moveTo(300,250);
 ctx.lineTo(300,120);
 ctx.stroke();
 
+ctx.fillText("B = "+B+" "+unidad,270,270);
+ctx.fillText("b = "+b+" "+unidad,280,110);
+ctx.fillText("h = "+h+" "+unidad,305,180);
+
 area=((B+b)*h)/2;
 
 textoArea="Área = (B + b) × h / 2 <br>("+B+" + "+b+") × "+h+" / 2 = "+area+" "+unidad+"²";
-
 textoPeri="Perímetro = suma de sus lados";
 
 }
@@ -340,6 +352,9 @@ ctx.beginPath();
 ctx.moveTo(300,190);
 ctx.lineTo(300,140);
 ctx.stroke();
+
+ctx.fillText("L = "+l+" "+unidad,400,150);
+ctx.fillText("Ap = "+a+" "+unidad,305,180);
 
 textoArea="Perímetro = 5 × lado <br>5 × "+l+" = "+peri+"<br><br>";
 textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad+"²";
@@ -371,6 +386,9 @@ ctx.moveTo(300,200);
 ctx.lineTo(300,140);
 ctx.stroke();
 
+ctx.fillText("L = "+l+" "+unidad,420,200);
+ctx.fillText("Ap = "+a+" "+unidad,305,180);
+
 textoArea="Perímetro = 6 × lado <br>6 × "+l+" = "+peri+"<br><br>";
 textoArea+="Área = (P × a) / 2 <br>("+peri+" × "+a+") / 2 = "+area+" "+unidad+"²";
 
@@ -382,7 +400,6 @@ document.getElementById("areaResultado").innerHTML=textoArea;
 document.getElementById("periResultado").innerHTML=textoPeri;
 
 }
-
 </script>
 
 </body>
