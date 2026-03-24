@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Juego de Restas</title>
+
+<style>
+body {
+    font-family: 'Comic Sans MS', cursive;
+    background: linear-gradient(135deg, #fddb92, #d1fdff);
+    text-align: center;
+}
+
+h1 {
+    color: #ff4d4d;
+}
+
+.caja {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    display: inline-block;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+}
+
+input {
+    font-size: 20px;
+    padding: 5px;
+    width: 100px;
+    text-align: center;
+}
+
+button {
+    margin-top: 10px;
+    font-size: 18px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 10px;
+    background: #ff4d4d;
+    color: white;
+    cursor: pointer;
+}
+
+.correcto {
+    color: green;
+    font-weight: bold;
+}
+
+.incorrecto {
+    color: red;
+    font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🎮 Juego de Restas</h1>
+
+<div class="caja">
+    <h2 id="pregunta"></h2>
+    
+    <input type="number" id="respuesta" placeholder="Respuesta">
+    <br>
+    <button onclick="verificar()">Responder</button>
+
+    <p id="mensaje"></p>
+    <p>⭐ Puntaje: <span id="puntaje">0</span></p>
+</div>
+
+<script>
+let num1, num2;
+let puntaje = 0;
+
+function nuevaPregunta() {
+    num1 = Math.floor(Math.random() * 90) + 10;
+    num2 = Math.floor(Math.random() * num1);
+
+    document.getElementById("pregunta").innerText = `${num1} - ${num2} = ?`;
+    document.getElementById("respuesta").value = "";
+    document.getElementById("mensaje").innerText = "";
+}
+
+function verificar() {
+    let respuesta = parseInt(document.getElementById("respuesta").value);
+    let correcta = num1 - num2;
+
+    if (respuesta === correcta) {
+        puntaje++;
+        document.getElementById("mensaje").innerHTML = "✅ ¡Correcto!";
+        document.getElementById("mensaje").className = "correcto";
+    } else {
+        document.getElementById("mensaje").innerHTML = `❌ Incorrecto. Era ${correcta}`;
+        document.getElementById("mensaje").className = "incorrecto";
+    }
+
+    document.getElementById("puntaje").innerText = puntaje;
+
+    setTimeout(nuevaPregunta, 1500);
+}
+
+// iniciar juego
+nuevaPregunta();
+</script>
+
+</body>
+</html>
