@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resta con voz</title>
+<title>Resta tipo cuaderno PRO</title>
 
 <style>
 body {
@@ -10,8 +10,6 @@ body {
     background: #eef2f7;
     text-align: center;
 }
-
-h1 { margin-top: 20px; }
 
 .caja {
     background: white;
@@ -51,34 +49,46 @@ button {
 
 .celda {
     width: 50px;
-    height: 60px;
-    text-align: center;
+    height: 70px;
     position: relative;
+}
+
+/* tachado */
+.tachado {
+    position: relative;
+}
+
+.tachado::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 3px;
+    background: red;
+    transform: rotate(-20deg);
+}
+
+/* número pequeño arriba (préstamo) */
+.arriba10 {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    right: 0;
+    font-size: 18px;
+    color: blue;
+    animation: aparecer 0.5s ease-in-out;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(-10px);}
+    to { opacity: 1; transform: translateY(0);}
 }
 
 .linea {
     border-top: 3px solid black;
-    width: 140px;
+    width: 160px;
     margin: auto;
-}
-
-/* Animaciones */
-.bajar {
-    animation: bajar 1s forwards;
-}
-
-@keyframes bajar {
-    from { transform: translateY(-30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-.cambiar {
-    animation: cambiar 1s forwards;
-}
-
-@keyframes cambiar {
-    from { color: red; }
-    to { color: black; }
 }
 
 .resultado {
@@ -90,7 +100,7 @@ button {
 
 <body>
 
-<h1>🎤 Resta con Profesor Virtual</h1>
+<h1>🧮 Resta tipo cuaderno PRO</h1>
 
 <div class="caja">
 
@@ -104,12 +114,9 @@ button {
 </div>
 
 <script>
-
-// 🔊 voz
 function hablar(texto){
     let voz = new SpeechSynthesisUtterance(texto);
     voz.lang = "es-ES";
-    voz.rate = 0.9;
     speechSynthesis.speak(voz);
 }
 
@@ -125,9 +132,6 @@ function animar(){
         return;
     }
 
-    let op = document.getElementById("op");
-
-    // separar cifras
     let u1 = n1 % 10;
     let d1 = Math.floor(n1 / 10) % 10;
     let c1 = Math.floor(n1 / 100);
@@ -136,7 +140,9 @@ function animar(){
     let d2 = Math.floor(n2 / 10) % 10;
     let c2 = Math.floor(n2 / 100);
 
-    // mostrar columnas
+    let op = document.getElementById("op");
+
+    // mostrar inicial
     op.innerHTML = `
         <div class="fila">
             <div class="celda" id="c1">${c1}</div>
@@ -155,48 +161,57 @@ function animar(){
 
     hablar(`Vamos a resolver ${n1} menos ${n2}`);
 
-    // 🧮 UNIDADES
+    // 🔴 UNIDADES
     setTimeout(()=>{
-        hablar(`Primero restamos las unidades: ${u1} menos ${u2}`);
+
+        hablar(`Primero unidades: ${u1} menos ${u2}`);
 
         if(u1 < u2){
-            hablar("No se puede, pedimos prestado de las decenas");
 
+            hablar("No se puede, pedimos prestado");
+
+            // tachar decena
+            document.getElementById("d1").classList.add("tachado");
+
+            // mostrar 10 arriba
+            document.getElementById("u1").innerHTML += `<div class="arriba10">10</div>`;
+
+            // actualizar valores
             d1 -= 1;
             u1 += 10;
 
-            document.getElementById("d1").innerText = d1;
-            document.getElementById("u1").innerText = u1;
-
-            hablar(`Ahora tenemos ${u1} menos ${u2}`);
+            setTimeout(()=>{
+                document.getElementById("d1").innerText = d1;
+                document.getElementById("u1").innerText = u1;
+            },1000);
         }
 
     },1000);
 
-    // 🧮 DECENAS
+    // 🔴 DECENAS
     setTimeout(()=>{
-        hablar(`Ahora restamos las decenas: ${d1} menos ${d2}`);
+
+        hablar(`Ahora decenas: ${d1} menos ${d2}`);
 
         if(d1 < d2){
-            hablar("No se puede, pedimos prestado de las centenas");
+
+            hablar("No se puede, pedimos prestado de centenas");
+
+            document.getElementById("c1").classList.add("tachado");
+            document.getElementById("d1").innerHTML += `<div class="arriba10">10</div>`;
 
             c1 -= 1;
             d1 += 10;
 
-            document.getElementById("c1").innerText = c1;
-            document.getElementById("d1").innerText = d1;
-
-            hablar(`Ahora tenemos ${d1} menos ${d2}`);
+            setTimeout(()=>{
+                document.getElementById("c1").innerText = c1;
+                document.getElementById("d1").innerText = d1;
+            },1000);
         }
 
-    },3500);
+    },4000);
 
-    // 🧮 CENTENAS
-    setTimeout(()=>{
-        hablar(`Finalmente restamos las centenas: ${c1} menos ${c2}`);
-    },6000);
-
-    // ✅ RESULTADO
+    // 🔴 RESULTADO
     setTimeout(()=>{
 
         let resultado = n1 - n2;
@@ -215,8 +230,9 @@ function animar(){
 
         hablar(`El resultado final es ${resultado}`);
 
-    },8000);
+    },7000);
 }
 </script>
+
 </body>
 </html>
