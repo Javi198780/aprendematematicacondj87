@@ -105,18 +105,17 @@ button {
 
 <script>
 
-// 🔊 función de voz
+// 🔊 voz
 function hablar(texto){
     let voz = new SpeechSynthesisUtterance(texto);
     voz.lang = "es-ES";
     voz.rate = 0.9;
-    voz.pitch = 1;
     speechSynthesis.speak(voz);
 }
 
 function animar(){
 
-    speechSynthesis.cancel(); // limpia voz previa
+    speechSynthesis.cancel();
 
     let n1 = parseInt(document.getElementById("n1").value);
     let n2 = parseInt(document.getElementById("n2").value);
@@ -126,23 +125,28 @@ function animar(){
         return;
     }
 
-    let u1 = n1 % 10;
-    let d1 = Math.floor(n1 / 10);
-
-    let u2 = n2 % 10;
-    let d2 = Math.floor(n2 / 10);
-
     let op = document.getElementById("op");
 
-    // Paso 1
+    // separar cifras
+    let u1 = n1 % 10;
+    let d1 = Math.floor(n1 / 10) % 10;
+    let c1 = Math.floor(n1 / 100);
+
+    let u2 = n2 % 10;
+    let d2 = Math.floor(n2 / 10) % 10;
+    let c2 = Math.floor(n2 / 100);
+
+    // mostrar columnas
     op.innerHTML = `
         <div class="fila">
+            <div class="celda" id="c1">${c1}</div>
             <div class="celda" id="d1">${d1}</div>
             <div class="celda" id="u1">${u1}</div>
         </div>
 
         <div class="fila">
-            <div class="celda">-${d2}</div>
+            <div class="celda">-${c2}</div>
+            <div class="celda">${d2}</div>
             <div class="celda">${u2}</div>
         </div>
 
@@ -151,46 +155,68 @@ function animar(){
 
     hablar(`Vamos a resolver ${n1} menos ${n2}`);
 
-    // Paso 2: unidades
+    // 🧮 UNIDADES
     setTimeout(()=>{
         hablar(`Primero restamos las unidades: ${u1} menos ${u2}`);
 
         if(u1 < u2){
+            hablar("No se puede, pedimos prestado de las decenas");
 
-            hablar("No se puede restar, pedimos prestado");
+            d1 -= 1;
+            u1 += 10;
 
-            // animación préstamo
-            setTimeout(()=>{
-                document.getElementById("d1").innerText = d1 - 1;
-                document.getElementById("d1").classList.add("cambiar");
+            document.getElementById("d1").innerText = d1;
+            document.getElementById("u1").innerText = u1;
 
-                document.getElementById("u1").innerText = u1 + 10;
-                document.getElementById("u1").classList.add("bajar");
-
-                hablar(`Ahora tenemos ${u1 + 10} menos ${u2}`);
-            },1500);
+            hablar(`Ahora tenemos ${u1} menos ${u2}`);
         }
 
     },1000);
 
-    // Paso 3: resultado
+    // 🧮 DECENAS
+    setTimeout(()=>{
+        hablar(`Ahora restamos las decenas: ${d1} menos ${d2}`);
+
+        if(d1 < d2){
+            hablar("No se puede, pedimos prestado de las centenas");
+
+            c1 -= 1;
+            d1 += 10;
+
+            document.getElementById("c1").innerText = c1;
+            document.getElementById("d1").innerText = d1;
+
+            hablar(`Ahora tenemos ${d1} menos ${d2}`);
+        }
+
+    },3500);
+
+    // 🧮 CENTENAS
+    setTimeout(()=>{
+        hablar(`Finalmente restamos las centenas: ${c1} menos ${c2}`);
+    },6000);
+
+    // ✅ RESULTADO
     setTimeout(()=>{
 
-        let unidades = (u1 < u2) ? (u1 + 10 - u2) : (u1 - u2);
-        let decenas = (u1 < u2) ? ((d1 - 1) - d2) : (d1 - d2);
+        let resultado = n1 - n2;
+
+        let u = resultado % 10;
+        let d = Math.floor(resultado / 10) % 10;
+        let c = Math.floor(resultado / 100);
 
         op.innerHTML += `
             <div class="fila resultado">
-                <div class="celda">${decenas}</div>
-                <div class="celda">${unidades}</div>
+                <div class="celda">${c}</div>
+                <div class="celda">${d}</div>
+                <div class="celda">${u}</div>
             </div>
         `;
 
-        hablar(`El resultado final es ${n1 - n2}`);
+        hablar(`El resultado final es ${resultado}`);
 
-    },4000);
+    },8000);
 }
 </script>
-
 </body>
 </html>
