@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resta tipo cuaderno PRO</title>
+<title>Resta Cuaderno PRO IA</title>
 
 <style>
 body {
@@ -48,14 +48,14 @@ button {
 }
 
 .celda {
-    width: 50px;
-    height: 70px;
+    width: 60px;
+    height: 80px;
     position: relative;
 }
 
-/* tachado */
-.tachado {
-    position: relative;
+.activa {
+    background: #fff3cd;
+    border-radius: 5px;
 }
 
 .tachado::after {
@@ -69,7 +69,6 @@ button {
     transform: rotate(-20deg);
 }
 
-/* número pequeño arriba (préstamo) */
 .arriba10 {
     position: absolute;
     top: -25px;
@@ -77,17 +76,25 @@ button {
     right: 0;
     font-size: 18px;
     color: blue;
-    animation: aparecer 0.5s ease-in-out;
 }
 
-@keyframes aparecer {
-    from { opacity: 0; transform: translateY(-10px);}
-    to { opacity: 1; transform: translateY(0);}
+.flecha {
+    position: absolute;
+    top: -40px;
+    left: 20px;
+    font-size: 25px;
+    animation: mover 1s infinite;
+}
+
+@keyframes mover {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+    100% { transform: translateY(0); }
 }
 
 .linea {
     border-top: 3px solid black;
-    width: 160px;
+    width: 180px;
     margin: auto;
 }
 
@@ -100,16 +107,16 @@ button {
 
 <body>
 
-<h1>🧮 Resta tipo cuaderno PRO</h1>
+<h1>🧮 Resta con IA y Animación</h1>
 
 <div class="caja">
 
-    <input type="number" id="n1" placeholder="Arriba">
-    <input type="number" id="n2" placeholder="Abajo">
-    <br>
-    <button onclick="animar()">Explicar</button>
+<input type="number" id="n1" placeholder="Arriba">
+<input type="number" id="n2" placeholder="Abajo">
+<br>
+<button onclick="animar()">Explicar</button>
 
-    <div class="operacion" id="op"></div>
+<div class="operacion" id="op"></div>
 
 </div>
 
@@ -117,161 +124,163 @@ button {
 function hablar(texto){
     let voz = new SpeechSynthesisUtterance(texto);
     voz.lang = "es-ES";
-    voz.rate = 0.9;
+    voz.rate = 0.8;
+    voz.pitch = 1.2;
+    voz.volume = 1;
     speechSynthesis.speak(voz);
 }
 
 function animar(){
 
-    speechSynthesis.cancel();
+speechSynthesis.cancel();
 
-    let n1 = parseInt(document.getElementById("n1").value);
-    let n2 = parseInt(document.getElementById("n2").value);
+let n1 = parseInt(document.getElementById("n1").value);
+let n2 = parseInt(document.getElementById("n2").value);
 
-    if(isNaN(n1) || isNaN(n2)){
-        alert("Ingresa números");
-        return;
-    }
+if(n2 > n1){
+    alert("El número de arriba debe ser mayor");
+    return;
+}
 
-    let u1 = n1 % 10;
-    let d1 = Math.floor(n1 / 10) % 10;
-    let c1 = Math.floor(n1 / 100);
+let u1 = n1 % 10;
+let d1 = Math.floor(n1 / 10) % 10;
+let c1 = Math.floor(n1 / 100);
 
-    let u2 = n2 % 10;
-    let d2 = Math.floor(n2 / 10) % 10;
-    let c2 = Math.floor(n2 / 100);
+let u2 = n2 % 10;
+let d2 = Math.floor(n2 / 10) % 10;
+let c2 = Math.floor(n2 / 100);
 
-    let op = document.getElementById("op");
+let op = document.getElementById("op");
 
-    op.innerHTML = `
-        <div class="fila">
-            <div class="celda" id="c1">${c1}</div>
-            <div class="celda" id="d1">${d1}</div>
-            <div class="celda" id="u1">${u1}</div>
-        </div>
+op.innerHTML = `
+<div class="fila">
+<div class="celda" id="c1">${c1}</div>
+<div class="celda" id="d1">${d1}</div>
+<div class="celda" id="u1">${u1}</div>
+</div>
 
-        <div class="fila">
-            <div class="celda">-${c2}</div>
-            <div class="celda">${d2}</div>
-            <div class="celda">${u2}</div>
-        </div>
+<div class="fila">
+<div class="celda">-${c2}</div>
+<div class="celda">${d2}</div>
+<div class="celda">${u2}</div>
+</div>
 
-        <div class="linea"></div>
-    `;
+<div class="linea"></div>
+<div class="fila resultado" id="res"></div>
+`;
 
-    hablar(`Vamos a resolver ${n1} menos ${n2}`);
+hablar(`Vamos a resolver ${n1} menos ${n2}`);
 
-    // 🔴 UNIDADES
-    setTimeout(()=>{
+// UNIDADES
+setTimeout(()=>{
 
-        hablar(`Primero restamos las unidades: ${u1} menos ${u2}`);
+let u = document.getElementById("u1");
+u.classList.add("activa");
 
-        if(u1 < u2){
+if(u1 < u2){
 
-            hablar(`Como ${u1} es menor que ${u2}, no se puede restar`);
+hablar("Ups... no alcanza 😮, necesitamos ayuda");
 
-            hablar("Pedimos prestado una decena");
+let d = document.getElementById("d1");
+d.classList.add("tachado");
+d.innerHTML += `<div class="flecha">⬇️</div>`;
 
-            document.getElementById("d1").classList.add("tachado");
-            document.getElementById("u1").innerHTML += `<div class="arriba10">10</div>`;
+u.innerHTML += `<div class="arriba10">+10</div>`;
 
-            let nuevaDecena = d1 - 1;
-            let nuevaUnidad = u1 + 10;
+u1 += 10;
+d1 -= 1;
 
-            setTimeout(()=>{
+setTimeout(()=>{
 
-                document.getElementById("d1").innerText = nuevaDecena;
-                document.getElementById("u1").innerText = nuevaUnidad;
+d.innerText = d1;
+u.innerText = u1;
 
-                hablar(`La decena se reduce a ${nuevaDecena}`);
-                hablar(`Y la unidad se convierte en ${nuevaUnidad}`);
+let resU = u1 - u2;
 
-                let resultadoU = nuevaUnidad - u2;
+hablar(`Ahora tenemos ${u1} menos ${u2}, eso es ${resU}`);
 
-                hablar(`Ahora sí podemos restar: ${nuevaUnidad} menos ${u2} es igual a ${resultadoU}`);
+mostrarResultado(resU, null, null);
 
-            },1200);
+},1500);
 
-            d1 = nuevaDecena;
-            u1 = nuevaUnidad;
+}else{
 
-        } else {
+let resU = u1 - u2;
+hablar(`${u1} menos ${u2} es ${resU}`);
+mostrarResultado(resU, null, null);
+}
 
-            let resultadoU = u1 - u2;
-            hablar(`Resultado de unidades: ${resultadoU}`);
-        }
+},1500);
 
-    },1000);
+// DECENAS
+setTimeout(()=>{
 
-    // 🔴 DECENAS
-    setTimeout(()=>{
+let d = document.getElementById("d1");
+d.classList.add("activa");
 
-        hablar(`Ahora restamos las decenas: ${d1} menos ${d2}`);
+if(d1 < d2){
 
-        if(d1 < d2){
+hablar("La decena necesita ayuda de la centena");
 
-            hablar(`Como ${d1} es menor que ${d2}, pedimos prestado de las centenas`);
+let c = document.getElementById("c1");
+c.classList.add("tachado");
+c.innerHTML += `<div class="flecha">⬇️</div>`;
 
-            document.getElementById("c1").classList.add("tachado");
-            document.getElementById("d1").innerHTML += `<div class="arriba10">10</div>`;
 
-            let nuevaCentena = c1 - 1;
-            let nuevaDecena = d1 + 10;
+d.innerHTML += `<div class="arriba10">+10</div>`;
 
-            setTimeout(()=>{
+d1 += 10;
+c1 -= 1;
 
-                document.getElementById("c1").innerText = nuevaCentena;
-                document.getElementById("d1").innerText = nuevaDecena;
+setTimeout(()=>{
 
-                hablar(`La centena baja a ${nuevaCentena}`);
-                hablar(`La decena se convierte en ${nuevaDecena}`);
+c.innerText = c1;
+d.innerText = d1;
 
-                let resultadoD = nuevaDecena - d2;
+let resD = d1 - d2;
 
-                hablar(`Entonces: ${nuevaDecena} menos ${d2} es igual a ${resultadoD}`);
+hablar(`Ahora ${d1} menos ${d2} es ${resD}`);
 
-            },1200);
+mostrarResultado(null, resD, null);
 
-            c1 = nuevaCentena;
-            d1 = nuevaDecena;
+},1500);
 
-        } else {
+}else{
 
-            let resultadoD = d1 - d2;
-            hablar(`Resultado de decenas: ${resultadoD}`);
-        }
+let resD = d1 - d2;
+hablar(`${d1} menos ${d2} es ${resD}`);
+mostrarResultado(null, resD, null);
+}
 
-    },4500);
+},5000);
 
-    // 🔴 CENTENAS
-    setTimeout(()=>{
+// CENTENAS
+setTimeout(()=>{
 
-        let resultadoC = c1 - c2;
-        hablar(`Finalmente, restamos las centenas: ${c1} menos ${c2} es igual a ${resultadoC}`);
+let resC = c1 - c2;
+hablar(`${c1} menos ${c2} es ${resC}`);
+mostrarResultado(null, null, resC);
 
-    },7500);
+},8500);
 
-    // 🔴 RESULTADO FINAL
-    setTimeout(()=>{
+}
 
-        let resultado = n1 - n2;
+function mostrarResultado(u,d,c){
 
-        let u = resultado % 10;
-        let d = Math.floor(resultado / 10) % 10;
-        let c = Math.floor(resultado / 100);
+let res = document.getElementById("res");
+let actual = res.innerHTML.split("</div>");
 
-        op.innerHTML += `
-            <div class="fila resultado">
-                <div class="celda">${c}</div>
-                <div class="celda">${d}</div>
-                <div class="celda">${u}</div>
-            </div>
-        `;
+let uHTML = actual[2] || '<div class="celda"></div>';
+let dHTML = actual[1] || '<div class="celda"></div>';
+let cHTML = actual[0] || '<div class="celda"></div>';
 
-        hablar(`El resultado final es ${resultado}`);
+if(u !== null) uHTML = `<div class="celda">${u}</div>`;
+if(d !== null) dHTML = `<div class="celda">${d}</div>`;
+if(c !== null) cHTML = `<div class="celda">${c}</div>`;
 
-    },10000);
+res.innerHTML = cHTML + dHTML + uHTML;
 }
 </script>
+
 </body>
 </html>
