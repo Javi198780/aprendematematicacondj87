@@ -117,6 +117,7 @@ button {
 function hablar(texto){
     let voz = new SpeechSynthesisUtterance(texto);
     voz.lang = "es-ES";
+    voz.rate = 0.9;
     speechSynthesis.speak(voz);
 }
 
@@ -142,7 +143,6 @@ function animar(){
 
     let op = document.getElementById("op");
 
-    // mostrar inicial
     op.innerHTML = `
         <div class="fila">
             <div class="celda" id="c1">${c1}</div>
@@ -164,26 +164,41 @@ function animar(){
     // 🔴 UNIDADES
     setTimeout(()=>{
 
-        hablar(`Primero unidades: ${u1} menos ${u2}`);
+        hablar(`Primero restamos las unidades: ${u1} menos ${u2}`);
 
         if(u1 < u2){
 
-            hablar("No se puede, pedimos prestado");
+            hablar(`Como ${u1} es menor que ${u2}, no se puede restar`);
 
-            // tachar decena
+            hablar("Pedimos prestado una decena");
+
             document.getElementById("d1").classList.add("tachado");
-
-            // mostrar 10 arriba
             document.getElementById("u1").innerHTML += `<div class="arriba10">10</div>`;
 
-            // actualizar valores
-            d1 -= 1;
-            u1 += 10;
+            let nuevaDecena = d1 - 1;
+            let nuevaUnidad = u1 + 10;
 
             setTimeout(()=>{
-                document.getElementById("d1").innerText = d1;
-                document.getElementById("u1").innerText = u1;
-            },1000);
+
+                document.getElementById("d1").innerText = nuevaDecena;
+                document.getElementById("u1").innerText = nuevaUnidad;
+
+                hablar(`La decena se reduce a ${nuevaDecena}`);
+                hablar(`Y la unidad se convierte en ${nuevaUnidad}`);
+
+                let resultadoU = nuevaUnidad - u2;
+
+                hablar(`Ahora sí podemos restar: ${nuevaUnidad} menos ${u2} es igual a ${resultadoU}`);
+
+            },1200);
+
+            d1 = nuevaDecena;
+            u1 = nuevaUnidad;
+
+        } else {
+
+            let resultadoU = u1 - u2;
+            hablar(`Resultado de unidades: ${resultadoU}`);
         }
 
     },1000);
@@ -191,27 +206,52 @@ function animar(){
     // 🔴 DECENAS
     setTimeout(()=>{
 
-        hablar(`Ahora decenas: ${d1} menos ${d2}`);
+        hablar(`Ahora restamos las decenas: ${d1} menos ${d2}`);
 
         if(d1 < d2){
 
-            hablar("No se puede, pedimos prestado de centenas");
+            hablar(`Como ${d1} es menor que ${d2}, pedimos prestado de las centenas`);
 
             document.getElementById("c1").classList.add("tachado");
             document.getElementById("d1").innerHTML += `<div class="arriba10">10</div>`;
 
-            c1 -= 1;
-            d1 += 10;
+            let nuevaCentena = c1 - 1;
+            let nuevaDecena = d1 + 10;
 
             setTimeout(()=>{
-                document.getElementById("c1").innerText = c1;
-                document.getElementById("d1").innerText = d1;
-            },1000);
+
+                document.getElementById("c1").innerText = nuevaCentena;
+                document.getElementById("d1").innerText = nuevaDecena;
+
+                hablar(`La centena baja a ${nuevaCentena}`);
+                hablar(`La decena se convierte en ${nuevaDecena}`);
+
+                let resultadoD = nuevaDecena - d2;
+
+                hablar(`Entonces: ${nuevaDecena} menos ${d2} es igual a ${resultadoD}`);
+
+            },1200);
+
+            c1 = nuevaCentena;
+            d1 = nuevaDecena;
+
+        } else {
+
+            let resultadoD = d1 - d2;
+            hablar(`Resultado de decenas: ${resultadoD}`);
         }
 
-    },4000);
+    },4500);
 
-    // 🔴 RESULTADO
+    // 🔴 CENTENAS
+    setTimeout(()=>{
+
+        let resultadoC = c1 - c2;
+        hablar(`Finalmente, restamos las centenas: ${c1} menos ${c2} es igual a ${resultadoC}`);
+
+    },7500);
+
+    // 🔴 RESULTADO FINAL
     setTimeout(()=>{
 
         let resultado = n1 - n2;
@@ -230,9 +270,8 @@ function animar(){
 
         hablar(`El resultado final es ${resultado}`);
 
-    },7000);
+    },10000);
 }
 </script>
-
 </body>
 </html>
