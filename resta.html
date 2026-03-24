@@ -2,187 +2,134 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resta Inteligente</title>
+<title>Resta Vertical</title>
 
 <style>
 body {
-    font-family: 'Comic Sans MS', cursive;
-    background: linear-gradient(135deg, #fddb92, #d1fdff);
+    font-family: 'Courier New', monospace;
+    background: #f0f0f0;
     text-align: center;
 }
 
-h1 { color: #ff4d4d; }
+h1 {
+    margin-top: 20px;
+}
 
-.caja {
+.contenedor {
     background: white;
     padding: 20px;
-    border-radius: 15px;
     display: inline-block;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
-    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
 
 input {
-    font-size: 20px;
-    padding: 5px;
-    width: 100px;
+    width: 60px;
+    font-size: 24px;
     text-align: center;
+    margin: 5px;
+}
+
+.resta {
+    font-size: 40px;
+    margin-top: 20px;
+    line-height: 1.2;
+}
+
+.linea {
+    border-top: 3px solid black;
+    width: 100px;
+    margin: 5px auto;
+}
+
+.resultado {
+    font-weight: bold;
+}
+
+.paso {
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: left;
 }
 
 button {
     margin-top: 10px;
-    font-size: 18px;
     padding: 8px 15px;
-    border: none;
+    font-size: 18px;
     border-radius: 10px;
-    background: #ff4d4d;
+    border: none;
+    background: #2196f3;
     color: white;
     cursor: pointer;
 }
-
-.correcto { color: green; font-weight: bold; }
-.incorrecto { color: red; font-weight: bold; }
-
-.pasos {
-    margin-top: 15px;
-    text-align: left;
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-.animacion {
-    animation: aparecer 0.5s ease-in-out;
-}
-
-@keyframes aparecer {
-    from { opacity: 0; transform: translateY(10px);}
-    to { opacity: 1; transform: translateY(0);}
-}
 </style>
-</head>
 
+</head>
 <body>
 
-<h1>🧮 Resta Inteligente</h1>
+<h1>🧮 Resta Vertical</h1>
 
-<div class="caja">
-    <h2 id="pregunta"></h2>
-    
-    <input type="number" id="respuesta" placeholder="Respuesta">
+<div class="contenedor">
+
+    <input type="number" id="num1" placeholder="Arriba">
+    <input type="number" id="num2" placeholder="Abajo">
     <br>
-    <button onclick="verificar()">Responder</button>
+    <button onclick="calcular()">Resolver</button>
 
-    <p id="mensaje"></p>
-    <p>⭐ Puntaje: <span id="puntaje">0</span></p>
-    <p>🎯 Nivel: <span id="nivel">Fácil</span></p>
+    <div class="resta" id="operacion"></div>
 
-    <div id="explicacion" class="pasos"></div>
+    <div id="pasos"></div>
+
 </div>
 
 <script>
-let num1, num2;
-let puntaje = 0;
-let nivel = 1;
+function calcular(){
+    let a = document.getElementById("num1").value;
+    let b = document.getElementById("num2").value;
 
-// 🔊 VOZ
-function hablar(texto){
-    let voz = new SpeechSynthesisUtterance(texto);
-    voz.lang = "es-ES";
-    speechSynthesis.speak(voz);
-}
+    if(a === "" || b === ""){
+        alert("Ingresa ambos números");
+        return;
+    }
 
-// 🎯 GENERAR SEGÚN NIVEL
-function nuevaPregunta() {
-    if(nivel === 1){
-        num1 = Math.floor(Math.random() * 50) + 10;
-    } else if(nivel === 2){
-        num1 = Math.floor(Math.random() * 90) + 10;
+    let n1 = parseInt(a);
+    let n2 = parseInt(b);
+
+    // mostrar formato vertical
+    document.getElementById("operacion").innerHTML = `
+        ${n1}<br>
+        - ${n2}
+        <div class="linea"></div>
+        <span class="resultado">${n1 - n2}</span>
+    `;
+
+    // explicación paso a paso
+    let pasos = "";
+
+    let u1 = n1 % 10;
+    let d1 = Math.floor(n1 / 10);
+
+    let u2 = n2 % 10;
+    let d2 = Math.floor(n2 / 10);
+
+    pasos += "<div class='paso'><b>📖 Paso a paso:</b><br>";
+
+    pasos += `1️⃣ Unidades: ${u1} - ${u2}<br>`;
+
+    if(u1 < u2){
+        pasos += `❌ No se puede → pedimos prestado<br>`;
+        u1 += 10;
+        d1 -= 1;
+        pasos += `Ahora: ${u1} - ${u2} = ${u1 - u2}<br>`;
     } else {
-        num1 = Math.floor(Math.random() * 900) + 100;
+        pasos += `✅ ${u1} - ${u2} = ${u1 - u2}<br>`;
     }
 
-    num2 = Math.floor(Math.random() * num1);
+    pasos += `<br>2️⃣ Decenas: ${d1} - ${d2} = ${d1 - d2}<br>`;
+    pasos += `<br>🎉 Resultado final: ${n1 - n2}</div>`;
 
-    document.getElementById("pregunta").innerText = `${num1} - ${num2} = ?`;
-    document.getElementById("respuesta").value = "";
-    document.getElementById("mensaje").innerText = "";
-    document.getElementById("explicacion").innerHTML = "";
+    document.getElementById("pasos").innerHTML = pasos;
 }
-
-// 📖 EXPLICACIÓN
-function explicar(a, b){
-    let pasos = [];
-    pasos.push("Vamos a resolver la resta paso a paso");
-
-    let unidadesA = a % 10;
-    let decenasA = Math.floor(a / 10);
-    let unidadesB = b % 10;
-    let decenasB = Math.floor(b / 10);
-
-    pasos.push(`Primero restamos las unidades: ${unidadesA} menos ${unidadesB}`);
-
-    if(unidadesA < unidadesB){
-        pasos.push("No se puede, pedimos prestado");
-        unidadesA += 10;
-        decenasA -= 1;
-    }
-
-    pasos.push(`Resultado de unidades: ${unidadesA - unidadesB}`);
-    pasos.push(`Ahora restamos decenas: ${decenasA} menos ${decenasB}`);
-    pasos.push(`Resultado final: ${a - b}`);
-
-    mostrarAnimado(pasos);
-}
-
-// ✨ MOSTRAR PASOS ANIMADOS
-function mostrarAnimado(pasos){
-    let cont = document.getElementById("explicacion");
-    cont.innerHTML = "";
-
-    pasos.forEach((texto, i)=>{
-        setTimeout(()=>{
-            let p = document.createElement("p");
-            p.className = "animacion";
-            p.innerText = texto;
-            cont.appendChild(p);
-
-            hablar(texto); // 🔊 habla cada paso
-        }, i * 1500);
-    });
-}
-
-// ✅ VERIFICAR
-function verificar(){
-    let respuesta = parseInt(document.getElementById("respuesta").value);
-    let correcta = num1 - num2;
-
-    if(respuesta === correcta){
-        puntaje++;
-        document.getElementById("mensaje").innerHTML = "✅ ¡Correcto!";
-        document.getElementById("mensaje").className = "correcto";
-
-        // subir nivel
-        if(puntaje >= 3) nivel = 2;
-        if(puntaje >= 6) nivel = 3;
-    } else {
-        document.getElementById("mensaje").innerHTML = `❌ Incorrecto. Era ${correcta}`;
-        document.getElementById("mensaje").className = "incorrecto";
-    }
-
-    document.getElementById("puntaje").innerText = puntaje;
-
-    document.getElementById("nivel").innerText =
-        nivel === 1 ? "Fácil" :
-        nivel === 2 ? "Medio" : "Difícil";
-
-    explicar(num1, num2);
-
-    setTimeout(nuevaPregunta, 7000);
-}
-
-// iniciar
-nuevaPregunta();
 </script>
 
 </body>
