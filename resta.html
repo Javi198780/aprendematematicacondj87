@@ -2,35 +2,122 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resta Cuaderno PRO Mejorada</title>
+<title>Resta Cuaderno PRO IA Mejorado</title>
 
 <style>
-body {font-family:'Courier New', monospace;background:#eef2f7;text-align:center;}
-.caja {background:white;padding:20px;display:inline-block;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.2);} 
-input {width:80px;font-size:20px;text-align:center;margin:5px;}
-button {margin-top:10px;padding:8px 15px;font-size:18px;border-radius:10px;border:none;background:#1976d2;color:white;cursor:pointer;}
-.operacion {margin-top:30px;font-size:40px;}
-.fila {display:flex;justify-content:center;}
-.celda {width:60px;height:80px;position:relative;}
-.linea {border-top:3px solid black;width:180px;margin:auto;}
-.resultado {color:green;font-weight:bold;}
-.activa {background:#fff3cd;border-radius:5px;}
-.tachado::after {content:"";position:absolute;left:0;right:0;top:50%;height:3px;background:red;transform:rotate(-20deg);} 
-.arriba10 {position:absolute;top:-25px;left:0;right:0;font-size:18px;color:blue;}
-.flecha {position:absolute;top:-40px;left:20px;font-size:25px;animation:mover 1s infinite;}
-@keyframes mover {0%{transform:translateY(0);}50%{transform:translateY(10px);}100%{transform:translateY(0);}}
+body {
+    font-family: 'Courier New', monospace;
+    background: #eef2f7;
+    text-align: center;
+}
+
+.caja {
+    background: white;
+    padding: 20px;
+    display: inline-block;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+input {
+    width: 80px;
+    font-size: 20px;
+    text-align: center;
+    margin: 5px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    background: #1976d2;
+    color: white;
+    cursor: pointer;
+}
+
+.operacion {
+    margin-top: 30px;
+    font-size: 40px;
+}
+
+.fila {
+    display: flex;
+    justify-content: center;
+}
+
+.celda {
+    width: 60px;
+    height: 80px;
+    position: relative;
+}
+
+.activa {
+    background: #fff3cd;
+    border-radius: 5px;
+}
+
+.tachado::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 3px;
+    background: red;
+    transform: rotate(-20deg);
+}
+
+.arriba10 {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    right: 0;
+    font-size: 18px;
+    color: blue;
+}
+
+.flecha {
+    position: absolute;
+    top: -40px;
+    left: 20px;
+    font-size: 25px;
+    animation: mover 1s infinite;
+}
+
+@keyframes mover {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+    100% { transform: translateY(0); }
+}
+
+.linea {
+    border-top: 3px solid black;
+    width: 180px;
+    margin: auto;
+}
+
+.resultado {
+    color: green;
+    font-weight: bold;
+}
 </style>
 </head>
 
 <body>
 
-<h1>🧮 Resta paso a paso tipo cuaderno</h1>
+<h1>🧮 Resta explicada paso a paso</h1>
 
 <div class="caja">
+
 <input type="number" id="n1" placeholder="Arriba">
-<input type="number" id="n2" placeholder="Abajo"><br>
+<input type="number" id="n2" placeholder="Abajo">
+<br>
 <button onclick="animar()">Explicar</button>
+
 <div class="operacion" id="op"></div>
+
 </div>
 
 <script>
@@ -38,14 +125,9 @@ button {margin-top:10px;padding:8px 15px;font-size:18px;border-radius:10px;borde
 function hablar(texto){
     let voz = new SpeechSynthesisUtterance(texto);
     voz.lang = "es-ES";
-    voz.rate = 0.8;
-    voz.pitch = 1.1;
+    voz.rate = 0.75;
+    voz.pitch = 1;
     voz.volume = 1;
-
-    let voces = speechSynthesis.getVoices();
-    let vozElegida = voces.find(v => v.lang.includes("es"));
-    if(vozElegida) voz.voice = vozElegida;
-
     speechSynthesis.speak(voz);
 }
 
@@ -56,8 +138,15 @@ speechSynthesis.cancel();
 let n1 = parseInt(document.getElementById("n1").value);
 let n2 = parseInt(document.getElementById("n2").value);
 
-if(isNaN(n1) || isNaN(n2)) return alert("Ingresa los números");
-if(n2 > n1) return alert("El número de arriba debe ser mayor");
+if(isNaN(n1) || isNaN(n2)){
+    alert("Ingresa los números");
+    return;
+}
+
+if(n2 > n1){
+    alert("El número de arriba debe ser mayor");
+    return;
+}
 
 let u1 = n1 % 10;
 let d1 = Math.floor(n1 / 10) % 10;
@@ -88,110 +177,82 @@ op.innerHTML = `
 <div class="fila resultado" id="res"></div>
 `;
 
-hablar(`Muy bien, vamos a resolver ${n1} menos ${n2}`);
+hablar(`Muy bien, vamos a resolver la resta ${n1} menos ${n2}.`);
 
-// 🔴 UNIDADES
+// UNIDADES
 setTimeout(()=>{
-
-let u = document.getElementById("u1");
-u.classList.add("activa");
 
 hablar("Primero trabajamos con las unidades.");
 
 if(u1 < u2){
 
-let d = document.getElementById("d1");
-d.classList.add("tachado");
-d.innerHTML += `<div class="flecha">⬇️</div>`;
+hablar(`Como ${u1} es menor que ${u2}, no podemos restar directamente.`);
 
-u.innerHTML += `<div class="arriba10">+10</div>`;
+hablar("Entonces pedimos prestada una decena.");
 
-hablar(`Como ${u1} es menor que ${u2}, pedimos una decena.`);
+u1 += 10;
+d1 -= 1;
 
-setTimeout(()=>{
-    hablar("La convertimos en 10 unidades.");
-    u1 += 10;
-    d1 -= 1;
-    u.innerText = u1;
-    d.innerText = d1;
-},1000);
 }
 
 resU = u1 - u2;
 
-setTimeout(()=>{
-    hablar(`Ahora ${u1} menos ${u2} es ${resU}`);
-    mostrar();
-},1500);
+hablar(`Ahora sí: ${u1} menos ${u2} es igual a ${resU}.`);
+
+mostrarResultado();
 
 },1500);
 
-// 🔴 DECENAS
+// DECENAS
 setTimeout(()=>{
 
-let d = document.getElementById("d1");
-d.classList.add("activa");
-
-hablar("Ahora trabajamos con las decenas.");
+hablar("Ahora continuamos con las decenas.");
 
 if(d1 < d2){
 
-let c = document.getElementById("c1");
-c.classList.add("tachado");
-c.innerHTML += `<div class="flecha">⬇️</div>`;
+hablar(`Como ${d1} es menor que ${d2}, pedimos prestada una centena.`);
 
- d.innerHTML += `<div class="arriba10">+10</div>`;
+d1 += 10;
+c1 -= 1;
 
-hablar("Pedimos una centena.");
-
-setTimeout(()=>{
-    hablar("La convertimos en 10 decenas.");
-    d1 += 10;
-    c1 -= 1;
-    d.innerText = d1;
-    c.innerText = c1;
-},1000);
 }
 
 resD = d1 - d2;
 
-setTimeout(()=>{
-    hablar(`Ahora ${d1} menos ${d2} es ${resD}`);
-    mostrar();
-},1500);
+hablar(`Entonces: ${d1} menos ${d2} es igual a ${resD}.`);
+
+mostrarResultado();
 
 },5000);
 
-// 🔴 CENTENAS
+// CENTENAS
 setTimeout(()=>{
-
-let c = document.getElementById("c1");
-c.classList.add("activa");
 
 hablar("Finalmente trabajamos con las centenas.");
 
 resC = c1 - c2;
 
-hablar(`${c1} menos ${c2} es ${resC}`);
+hablar(`Tenemos: ${c1} menos ${c2} es igual a ${resC}.`);
 
-mostrar();
+mostrarResultado();
 
-},8500);
+},8000);
 
-// 🟢 RESULTADO FINAL
+// RESULTADO FINAL
 setTimeout(()=>{
 
-let total = (resC * 100) + (resD * 10) + resU;
+let resultado = (resC * 100) + (resD * 10) + resU;
 
-hablar(`Excelente trabajo. El resultado final es ${total}`);
+hablar(`Por lo tanto, el resultado final es ${resultado}.`);
 
 },11000);
 
-function mostrar(){
+function mostrarResultado(){
     document.getElementById("res").innerHTML = `
-    <div class="celda">${resC || ""}</div>
-    <div class="celda">${resD || ""}</div>
-    <div class="celda">${resU || ""}</div>`;
+        <div class="celda">${resC || ""}</div>
+        <div class="celda">${resD || ""}</div>
+        <div class="celda">${resU || ""}</div>
+    `;
 }
 
 }
