@@ -2,54 +2,30 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resta Vertical</title>
+<title>Resta con voz</title>
 
 <style>
 body {
     font-family: 'Courier New', monospace;
-    background: #f0f0f0;
+    background: #eef2f7;
     text-align: center;
 }
 
-h1 {
-    margin-top: 20px;
-}
+h1 { margin-top: 20px; }
 
-.contenedor {
+.caja {
     background: white;
     padding: 20px;
     display: inline-block;
     border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 input {
-    width: 60px;
-    font-size: 24px;
+    width: 80px;
+    font-size: 20px;
     text-align: center;
     margin: 5px;
-}
-
-.resta {
-    font-size: 40px;
-    margin-top: 20px;
-    line-height: 1.2;
-}
-
-.linea {
-    border-top: 3px solid black;
-    width: 100px;
-    margin: 5px auto;
-}
-
-.resultado {
-    font-weight: bold;
-}
-
-.paso {
-    margin-top: 10px;
-    font-size: 16px;
-    text-align: left;
 }
 
 button {
@@ -58,53 +34,97 @@ button {
     font-size: 18px;
     border-radius: 10px;
     border: none;
-    background: #2196f3;
+    background: #1976d2;
     color: white;
     cursor: pointer;
 }
-</style>
 
+.operacion {
+    margin-top: 30px;
+    font-size: 40px;
+}
+
+.fila {
+    display: flex;
+    justify-content: center;
+}
+
+.celda {
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    position: relative;
+}
+
+.linea {
+    border-top: 3px solid black;
+    width: 140px;
+    margin: auto;
+}
+
+/* Animaciones */
+.bajar {
+    animation: bajar 1s forwards;
+}
+
+@keyframes bajar {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.cambiar {
+    animation: cambiar 1s forwards;
+}
+
+@keyframes cambiar {
+    from { color: red; }
+    to { color: black; }
+}
+
+.resultado {
+    color: green;
+    font-weight: bold;
+}
+</style>
 </head>
+
 <body>
 
-<h1>🧮 Resta Vertical</h1>
+<h1>🎤 Resta con Profesor Virtual</h1>
 
-<div class="contenedor">
+<div class="caja">
 
-    <input type="number" id="num1" placeholder="Arriba">
-    <input type="number" id="num2" placeholder="Abajo">
+    <input type="number" id="n1" placeholder="Arriba">
+    <input type="number" id="n2" placeholder="Abajo">
     <br>
-    <button onclick="calcular()">Resolver</button>
+    <button onclick="animar()">Explicar</button>
 
-    <div class="resta" id="operacion"></div>
-
-    <div id="pasos"></div>
+    <div class="operacion" id="op"></div>
 
 </div>
 
 <script>
-function calcular(){
-    let a = document.getElementById("num1").value;
-    let b = document.getElementById("num2").value;
 
-    if(a === "" || b === ""){
-        alert("Ingresa ambos números");
+// 🔊 función de voz
+function hablar(texto){
+    let voz = new SpeechSynthesisUtterance(texto);
+    voz.lang = "es-ES";
+    voz.rate = 0.9;
+    voz.pitch = 1;
+    speechSynthesis.speak(voz);
+}
+
+function animar(){
+
+    speechSynthesis.cancel(); // limpia voz previa
+
+    let n1 = parseInt(document.getElementById("n1").value);
+    let n2 = parseInt(document.getElementById("n2").value);
+
+    if(isNaN(n1) || isNaN(n2)){
+        alert("Ingresa números");
         return;
     }
-
-    let n1 = parseInt(a);
-    let n2 = parseInt(b);
-
-    // mostrar formato vertical
-    document.getElementById("operacion").innerHTML = `
-        ${n1}<br>
-        - ${n2}
-        <div class="linea"></div>
-        <span class="resultado">${n1 - n2}</span>
-    `;
-
-    // explicación paso a paso
-    let pasos = "";
 
     let u1 = n1 % 10;
     let d1 = Math.floor(n1 / 10);
@@ -112,23 +132,63 @@ function calcular(){
     let u2 = n2 % 10;
     let d2 = Math.floor(n2 / 10);
 
-    pasos += "<div class='paso'><b>📖 Paso a paso:</b><br>";
+    let op = document.getElementById("op");
 
-    pasos += `1️⃣ Unidades: ${u1} - ${u2}<br>`;
+    // Paso 1
+    op.innerHTML = `
+        <div class="fila">
+            <div class="celda" id="d1">${d1}</div>
+            <div class="celda" id="u1">${u1}</div>
+        </div>
 
-    if(u1 < u2){
-        pasos += `❌ No se puede → pedimos prestado<br>`;
-        u1 += 10;
-        d1 -= 1;
-        pasos += `Ahora: ${u1} - ${u2} = ${u1 - u2}<br>`;
-    } else {
-        pasos += `✅ ${u1} - ${u2} = ${u1 - u2}<br>`;
-    }
+        <div class="fila">
+            <div class="celda">-${d2}</div>
+            <div class="celda">${u2}</div>
+        </div>
 
-    pasos += `<br>2️⃣ Decenas: ${d1} - ${d2} = ${d1 - d2}<br>`;
-    pasos += `<br>🎉 Resultado final: ${n1 - n2}</div>`;
+        <div class="linea"></div>
+    `;
 
-    document.getElementById("pasos").innerHTML = pasos;
+    hablar(`Vamos a resolver ${n1} menos ${n2}`);
+
+    // Paso 2: unidades
+    setTimeout(()=>{
+        hablar(`Primero restamos las unidades: ${u1} menos ${u2}`);
+
+        if(u1 < u2){
+
+            hablar("No se puede restar, pedimos prestado");
+
+            // animación préstamo
+            setTimeout(()=>{
+                document.getElementById("d1").innerText = d1 - 1;
+                document.getElementById("d1").classList.add("cambiar");
+
+                document.getElementById("u1").innerText = u1 + 10;
+                document.getElementById("u1").classList.add("bajar");
+
+                hablar(`Ahora tenemos ${u1 + 10} menos ${u2}`);
+            },1500);
+        }
+
+    },1000);
+
+    // Paso 3: resultado
+    setTimeout(()=>{
+
+        let unidades = (u1 < u2) ? (u1 + 10 - u2) : (u1 - u2);
+        let decenas = (u1 < u2) ? ((d1 - 1) - d2) : (d1 - d2);
+
+        op.innerHTML += `
+            <div class="fila resultado">
+                <div class="celda">${decenas}</div>
+                <div class="celda">${unidades}</div>
+            </div>
+        `;
+
+        hablar(`El resultado final es ${n1 - n2}`);
+
+    },4000);
 }
 </script>
 
