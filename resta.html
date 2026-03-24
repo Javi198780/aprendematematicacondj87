@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Resta Cuaderno PRO IA</title>
+<title>Resta Cuaderno PRO IA Mejorado</title>
 
 <style>
 body {
@@ -107,7 +107,7 @@ button {
 
 <body>
 
-<h1>🧮 Resta con IA y Animación</h1>
+<h1>🧮 Resta explicada paso a paso</h1>
 
 <div class="caja">
 
@@ -121,11 +121,12 @@ button {
 </div>
 
 <script>
+
 function hablar(texto){
     let voz = new SpeechSynthesisUtterance(texto);
     voz.lang = "es-ES";
-    voz.rate = 0.8;
-    voz.pitch = 1.2;
+    voz.rate = 0.75;
+    voz.pitch = 1;
     voz.volume = 1;
     speechSynthesis.speak(voz);
 }
@@ -136,6 +137,11 @@ speechSynthesis.cancel();
 
 let n1 = parseInt(document.getElementById("n1").value);
 let n2 = parseInt(document.getElementById("n2").value);
+
+if(isNaN(n1) || isNaN(n2)){
+    alert("Ingresa los números");
+    return;
+}
 
 if(n2 > n1){
     alert("El número de arriba debe ser mayor");
@@ -149,6 +155,8 @@ let c1 = Math.floor(n1 / 100);
 let u2 = n2 % 10;
 let d2 = Math.floor(n2 / 10) % 10;
 let c2 = Math.floor(n2 / 100);
+
+let resU = 0, resD = 0, resC = 0;
 
 let op = document.getElementById("op");
 
@@ -169,117 +177,86 @@ op.innerHTML = `
 <div class="fila resultado" id="res"></div>
 `;
 
-hablar(`Vamos a resolver ${n1} menos ${n2}`);
+hablar(`Muy bien, vamos a resolver la resta ${n1} menos ${n2}.`);
 
 // UNIDADES
 setTimeout(()=>{
 
-let u = document.getElementById("u1");
-u.classList.add("activa");
+hablar("Primero trabajamos con las unidades.");
 
 if(u1 < u2){
 
-hablar("Ups... no alcanza 😮, necesitamos ayuda");
+hablar(`Como ${u1} es menor que ${u2}, no podemos restar directamente.`);
 
-let d = document.getElementById("d1");
-d.classList.add("tachado");
-d.innerHTML += `<div class="flecha">⬇️</div>`;
-
-u.innerHTML += `<div class="arriba10">+10</div>`;
+hablar("Entonces pedimos prestada una decena.");
 
 u1 += 10;
 d1 -= 1;
 
-setTimeout(()=>{
-
-d.innerText = d1;
-u.innerText = u1;
-
-let resU = u1 - u2;
-
-hablar(`Ahora tenemos ${u1} menos ${u2}, eso es ${resU}`);
-
-mostrarResultado(resU, null, null);
-
-},1500);
-
-}else{
-
-let resU = u1 - u2;
-hablar(`${u1} menos ${u2} es ${resU}`);
-mostrarResultado(resU, null, null);
 }
+
+resU = u1 - u2;
+
+hablar(`Ahora sí: ${u1} menos ${u2} es igual a ${resU}.`);
+
+mostrarResultado();
 
 },1500);
 
 // DECENAS
 setTimeout(()=>{
 
-let d = document.getElementById("d1");
-d.classList.add("activa");
+hablar("Ahora continuamos con las decenas.");
 
 if(d1 < d2){
 
-hablar("La decena necesita ayuda de la centena");
-
-let c = document.getElementById("c1");
-c.classList.add("tachado");
-c.innerHTML += `<div class="flecha">⬇️</div>`;
-
-
-d.innerHTML += `<div class="arriba10">+10</div>`;
+hablar(`Como ${d1} es menor que ${d2}, pedimos prestada una centena.`);
 
 d1 += 10;
 c1 -= 1;
 
-setTimeout(()=>{
-
-c.innerText = c1;
-d.innerText = d1;
-
-let resD = d1 - d2;
-
-hablar(`Ahora ${d1} menos ${d2} es ${resD}`);
-
-mostrarResultado(null, resD, null);
-
-},1500);
-
-}else{
-
-let resD = d1 - d2;
-hablar(`${d1} menos ${d2} es ${resD}`);
-mostrarResultado(null, resD, null);
 }
+
+resD = d1 - d2;
+
+hablar(`Entonces: ${d1} menos ${d2} es igual a ${resD}.`);
+
+mostrarResultado();
 
 },5000);
 
 // CENTENAS
 setTimeout(()=>{
 
-let resC = c1 - c2;
-hablar(`${c1} menos ${c2} es ${resC}`);
-mostrarResultado(null, null, resC);
+hablar("Finalmente trabajamos con las centenas.");
 
-},8500);
+resC = c1 - c2;
+
+hablar(`Tenemos: ${c1} menos ${c2} es igual a ${resC}.`);
+
+mostrarResultado();
+
+},8000);
+
+// RESULTADO FINAL
+setTimeout(()=>{
+
+let resultado = (resC * 100) + (resD * 10) + resU;
+
+hablar(`Por lo tanto, el resultado final es ${resultado}.`);
+
+},11000);
+
+function mostrarResultado(){
+    document.getElementById("res").innerHTML = `
+        <div class="celda">${resC || ""}</div>
+        <div class="celda">${resD || ""}</div>
+        <div class="celda">${resU || ""}</div>
+    `;
+}
 
 }
 
-function mostrarResultado(u,d,c){
-
-let res = document.getElementById("res");
-let actual = res.innerHTML.split("</div>");
-
-let uHTML = actual[2] || '<div class="celda"></div>';
-let dHTML = actual[1] || '<div class="celda"></div>';
-let cHTML = actual[0] || '<div class="celda"></div>';
-
-if(u !== null) uHTML = `<div class="celda">${u}</div>`;
-if(d !== null) dHTML = `<div class="celda">${d}</div>`;
-if(c !== null) cHTML = `<div class="celda">${c}</div>`;
-
-res.innerHTML = cHTML + dHTML + uHTML;
-}
 </script>
 
 </body>
