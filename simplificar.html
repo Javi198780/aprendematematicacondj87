@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Duolingo de Fracciones</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{font-family:'Comic Sans MS';background:linear-gradient(135deg,#43cea2,#185a9d);color:white;text-align:center;margin:0}
+header{background:#ff9800;padding:20px;font-size:28px}
+.container{padding:20px}
+.card{background:white;color:black;border-radius:20px;padding:20px;margin:20px auto;width:90%;max-width:650px;box-shadow:0 6px 15px rgba(0,0,0,0.3)}
+button{padding:12px 25px;font-size:18px;border:none;border-radius:12px;background:#4caf50;color:white;cursor:pointer}
+button:hover{background:#45a049}
+input{padding:10px;font-size:18px;margin:10px;border-radius:10px;border:1px solid #ccc;text-align:center}
+.mapa{display:flex;justify-content:center;gap:15px;flex-wrap:wrap}
+.nivel{width:80px;height:80px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer}
+.nivel.activo{background:#4caf50;color:white}
+.nivel.bloqueado{background:#aaa}
+#personaje{font-size:60px}
+.barra{height:20px;background:#ddd;border-radius:10px}
+.progreso{height:20px;background:#4caf50;border-radius:10px;width:0%}
+</style>
+</head>
+<body>
+<header>🎮 Duolingo de Fracciones 🎮</header>
+<div class="container">
+
+<div class="card">
+<h2>Mapa de niveles 🌍</h2>
+<div class="mapa">
+<div class="nivel activo" onclick="iniciarNivel(1)">1</div>
+<div class="nivel bloqueado" id="n2">2</div>
+<div class="nivel bloqueado" id="n3">3</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Tu avatar 🧑</h2>
+<div id="personaje">🙂</div>
+<p>Puntos: <span id="puntos">0</span></p>
+<div class="barra"><div id="progreso" class="progreso"></div></div>
+</div>
+
+<div class="card" id="juego" style="display:none">
+<h2>Reto</h2>
+<p id="pregunta"></p>
+<input type="text" id="respuesta" placeholder="Ej: 1/2"><br>
+<button onclick="verificar()">Responder</button>
+<div id="feedback"></div>
+</div>
+
+</div>
+
+<script>
+let nivel=1,puntos=0,n1,n2;
+
+function mcd(a,b){return b===0?a:mcd(b,a%b)}
+
+function iniciarNivel(n){
+ nivel=n;
+ document.getElementById('juego').style.display='block';
+ generar();
+}
+
+function generar(){
+ let base=Math.floor(Math.random()*9)+2;
+ let mult=nivel* (Math.floor(Math.random()*4)+2);
+ n1=base; n2=base*mult;
+ document.getElementById('pregunta').innerText=`Nivel ${nivel}: Simplifica ${n2}/${n1}`;
+}
+
+function verificar(){
+ let resp=document.getElementById('respuesta').value;
+ let d=mcd(n2,n1);
+ let correcta=`${n2/d}/${n1/d}`;
+ let fb=document.getElementById('feedback');
+ let avatar=document.getElementById('personaje');
+
+ if(resp===correcta){
+   fb.innerText="✅ Correcto";
+   avatar.innerText="😎";
+   puntos+=10;
+ }else{
+   fb.innerText=`❌ Era ${correcta}`;
+   avatar.innerText="😢";
+   puntos-=5;
+ }
+
+ document.getElementById('puntos').innerText=puntos;
+ actualizarProgreso();
+ desbloquear();
+ generar();
+}
+
+function actualizarProgreso(){
+ let p=document.getElementById('progreso');
+ p.style.width=Math.min(100,puntos)+"%";
+}
+
+function desbloquear(){
+ if(puntos>=30 && nivel==1){
+   document.getElementById('n2').classList.remove('bloqueado');
+   document.getElementById('n2').classList.add('activo');
+   document.getElementById('n2').onclick=()=>iniciarNivel(2);
+ }
+ if(puntos>=60 && nivel==2){
+   document.getElementById('n3').classList.remove('bloqueado');
+   document.getElementById('n3').classList.add('activo');
+   document.getElementById('n3').onclick=()=>iniciarNivel(3);
+ }
+}
+</script>
+</body>
+</html>
